@@ -17,6 +17,9 @@ namespace hlt {
             halite(halite)
         {}
 
+        MapCell(const MapCell& mapCell) : MapCell(mapCell.position.x, mapCell.position.y, mapCell.halite) 
+        {}
+
         bool is_empty() const {
             return !ship && !structure;
         }

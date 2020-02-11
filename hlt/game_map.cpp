@@ -40,3 +40,7 @@ std::unique_ptr<hlt::GameMap> hlt::GameMap::_generate() {
 
     return map;
 }
+
+std::vector< std::vector<hlt::MapCell> > hlt::GameMap::getCells() {
+    return cells;
+}

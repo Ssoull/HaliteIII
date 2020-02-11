@@ -1,6 +1,7 @@
 #include "hlt/game.hpp"
 #include "hlt/constants.hpp"
 #include "hlt/log.hpp"
+#include "classes/chunk.hpp"
 
 #include <random>
 #include <ctime>
@@ -17,6 +18,7 @@ int main(int argc, char* argv[]) {
     }
     mt19937 rng(rng_seed);
 
+
     Game game;
     // At this point "game" variable is populated with initial map data.
     // This is a good place to do computationally expensive start-up pre-processing.
@@ -24,6 +26,8 @@ int main(int argc, char* argv[]) {
     game.ready("MyCppBot");
 
     log::log("Successfully created bot! My Player ID is " + to_string(game.my_id) + ". Bot rng seed is " + to_string(rng_seed) + ".");
+    Chunk chunk(0, 0, game.game_map->getCells());
+    chunk.getLowestCell();
 
     for (;;) {
         game.update_frame();
@@ -35,7 +39,7 @@ int main(int argc, char* argv[]) {
         for (const auto& ship_iterator : me->ships) {
             shared_ptr<Ship> ship = ship_iterator.second;
             if (game_map->at(ship)->halite < constants::MAX_HALITE / 10 || ship->is_full()) {
-                Direction random_direction = ALL_CARDINALS[rng() % 4];
+                Direction random_direction = ALL_CARDINALS[3];
                 command_queue.push_back(ship->move(random_direction));
             } else {
                 command_queue.push_back(ship->stay_still());

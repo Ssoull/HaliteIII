@@ -88,5 +88,8 @@ namespace hlt {
 
         void _update();
         static std::unique_ptr<GameMap> _generate();
+
+        // GETTER
+        std::vector< std::vector<MapCell> > getCells();
     };
 }
