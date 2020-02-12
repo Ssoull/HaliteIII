@@ -12,7 +12,6 @@ namespace hlt {
     struct Ship : Entity {
         Halite halite;
         unique_ptr<Dstar> pathToGoal;
-        int numOfShip;
 
         Ship(PlayerId player_id, EntityId ship_id, int x, int y, Halite halite, int game_width, int game_height) :
             Entity(player_id, ship_id, x, y),
@@ -46,7 +45,7 @@ namespace hlt {
                 nextStep.y = position.y;
             }
 
-            log::log("NEXTSTEP : " + std::to_string(nextStep.x) + ", " + std::to_string(nextStep.y));
+            log::log("NEXTSTEP : " + std::to_string(nextStep.x) + ", " + std::to_string(nextStep.y) + ", ID SHIP : " + std::to_string(id));
             log::log("CURRENT : " + std::to_string(position.x) + ", " + std::to_string(position.y));
 
             int tempX = nextStep.x - position.x;

@@ -7,6 +7,7 @@ void hlt::Player::_update(int num_ships, int num_dropoffs, Halite halite, int ga
     ships.clear();
     for (int i = 0; i < num_ships; ++i) {
         std::shared_ptr<hlt::Ship> ship = hlt::Ship::_generate(id, game_width, game_height);
+
         ships[ship->id] = ship;
     }
 

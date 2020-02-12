@@ -73,18 +73,18 @@ namespace hlt {
             return possible_moves;
         }
 
-        Direction naive_navigate(std::shared_ptr<Ship> ship, const Position& destination) {
-            // get_unsafe_moves normalizes for us
-            for (auto direction : get_unsafe_moves(ship->position, destination)) {
-                Position target_pos = ship->position.directional_offset(direction);
-                if (!at(target_pos)->is_occupied()) {
-                    at(target_pos)->mark_unsafe(ship);
-                    return direction;
-                }
-            }
+        // Direction naive_navigate(std::shared_ptr<Ship> ship, const Position& destination) {
+        //     // get_unsafe_moves normalizes for us
+        //     for (auto direction : get_unsafe_moves(ship->position, destination)) {
+        //         Position target_pos = ship->position.directional_offset(direction);
+        //         if (!at(target_pos)->is_occupied()) {
+        //             at(target_pos)->mark_unsafe(ship);
+        //             return direction;
+        //         }
+        //     }
 
-            return Direction::STILL;
-        }
+        //     return Direction::STILL;
+        // }
 
         void _update();
         static std::unique_ptr<GameMap> _generate();

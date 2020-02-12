@@ -49,10 +49,10 @@ bool Dstar::isValid(state u) {
  * Returns the path created by replan()
  */
 list<state> Dstar::getPath() {
-    std::list<state>::iterator it;
-    for(it = path.begin(); it != path.end()  ; ++it){
-        hlt::log::log("[Dstar::getPath] Path element n° : x : "+ to_string(it->x)+", y : "+to_string(it->y));
-    }
+    // std::list<state>::iterator it;
+    // for(it = path.begin(); it != path.end()  ; ++it){
+    //     hlt::log::log("[Dstar::getPath] Path element n° : x : "+ to_string(it->x)+", y : "+to_string(it->y));
+    // }
 
   return path;
 }

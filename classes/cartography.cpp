@@ -7,18 +7,21 @@ Cartography::Cartography(){
 
 void Cartography::checkUnsafeCells(){
     std::vector<hlt::MapCell> *unsafeCells = new std::vector<hlt::MapCell>();
-    for(std::vector<std::vector<hlt::MapCell>>::iterator it = m_map.cells.begin(); it != m_map.cells.end(); ++it){
-        for(std::vector<hlt::MapCell>::iterator iit = it->begin(); iit != it->end(); ++iit ){
-            hlt::log::log(to_string(iit->is_occupied));
-            if(iit->is_occupied()){
-                unsafeCells->push_back(*iit);
+    for(int x = 0; x < m_map->cells.size(); ++x){
+        for(int y = 0; y < m_map->cells[x].size(); ++y ){
+            hlt::log::log(to_string(m_map->cells[x][y].is_occupied()));
+            // if(&iit.is_occupied()){
+            //     unsafeCells->push_back(*iit);
+            // }
+            if(m_map->cells[x][y].is_occupied()){
+                
             }
         }
     }
     m_unsafeCells = unsafeCells;
 }
 
-void Cartography::updateCartographyData(hlt::GameMap map){
+void Cartography::updateCartographyData(shared_ptr<hlt::GameMap> map/*, std::vector<hlt::Entity> entities*/){
     hlt::log::log("Map data updated");
     m_map = map;
     checkUnsafeCells();

@@ -39,24 +39,27 @@ int main(int argc, char* argv[]) {
     log::log(to_string(myPath.size()));
     testDstar->replan();
     myPath = testDstar->getPath();
-    Cartography *carto = new Cartography();
+    
 
     for (;;) {
         game.update_frame();
         shared_ptr<Player> me = game.me;
-        unique_ptr<GameMap>& game_map = game.game_map;
+        shared_ptr<GameMap>& game_map = game.game_map;
 
         vector<Command> command_queue;
 
-
-        carto->updateCartographyData(*game_map);
-        log::log("Number of unsafe cells : " + to_string(carto->getUnsafeCells()->size()));
+        Cartography *carto = new Cartography();
+        carto->updateCartographyData(game_map);
+        // log::log("Number of unsafe cells : " + to_string(carto->getUnsafeCells()->size()));
 
         for (const auto& ship_iterator : me->ships) {
             shared_ptr<Ship> ship = ship_iterator.second;
             if (game_map->at(ship)->halite < constants::MAX_HALITE / 10 || ship->is_full()) {
                 Direction random_direction = ALL_CARDINALS[3];
+                log::log("[MyBot.cpp] Ship id on movement :" + to_string(ship->id));
+
                 command_queue.push_back(ship->moveWithPosition(Position(0, 0)));
+                // command_queue.push_back(ship->move(game.game_map->naive_navigate(ship, Position(0, 0))));
             } else {
                 command_queue.push_back(ship->stay_still());
             }

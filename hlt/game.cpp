@@ -44,7 +44,7 @@ void hlt::Game::update_frame() {
     for (const auto& player : players) {
         for (auto& ship_iterator : player->ships) {
             auto ship = ship_iterator.second;
-            game_map->at(ship)->mark_unsafe(ship);
+            game_map->cells[ship->position.x][ship->position.y].mark_unsafe(ship);
         }
 
         game_map->at(player->shipyard)->structure = player->shipyard;
