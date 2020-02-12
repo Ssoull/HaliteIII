@@ -2,6 +2,7 @@
 #include "hlt/constants.hpp"
 #include "hlt/log.hpp"
 #include "classes/chunk.hpp"
+#include "classes/dstar.hpp"
 
 #include <random>
 #include <ctime>
@@ -26,8 +27,17 @@ int main(int argc, char* argv[]) {
     game.ready("MyCppBot");
 
     log::log("Successfully created bot! My Player ID is " + to_string(game.my_id) + ". Bot rng seed is " + to_string(rng_seed) + ".");
-    Chunk chunk(0, 0, game.game_map->getCells());
+    Chunk chunk(0, 10, game.game_map->getCells());
     chunk.getLowestCell();
+
+    //Dstar test
+    // Dstar *testDstar = new Dstar(game.game_map->width, game.game_map->height);
+    Dstar *testDstar = new Dstar(6, 6);
+    testDstar->init(0,0,5,5);
+    list<state> myPath;
+    log::log(to_string(myPath.size()));
+    testDstar->replan();
+    myPath = testDstar->getPath();
 
     for (;;) {
         game.update_frame();
