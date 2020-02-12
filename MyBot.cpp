@@ -3,6 +3,7 @@
 #include "hlt/log.hpp"
 #include "classes/chunk.hpp"
 #include "classes/dstar.hpp"
+#include "classes/cartography.hpp"
 
 #include <random>
 #include <ctime>
@@ -38,6 +39,7 @@ int main(int argc, char* argv[]) {
     log::log(to_string(myPath.size()));
     testDstar->replan();
     myPath = testDstar->getPath();
+    Cartography *carto = new Cartography();
 
     for (;;) {
         game.update_frame();
@@ -45,6 +47,10 @@ int main(int argc, char* argv[]) {
         unique_ptr<GameMap>& game_map = game.game_map;
 
         vector<Command> command_queue;
+
+
+        carto->updateCartographyData(*game_map);
+        log::log("Number of unsafe cells : " + to_string(carto->getUnsafeCells()->size()));
 
         for (const auto& ship_iterator : me->ships) {
             shared_ptr<Ship> ship = ship_iterator.second;

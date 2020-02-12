@@ -11,4 +11,6 @@ __pycache__/
 *.iws
 *.exe
 obj/
+tools/
+make.bat
 .vscode/
