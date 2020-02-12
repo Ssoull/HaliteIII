@@ -36,7 +36,7 @@ void hlt::Game::update_frame() {
         Halite halite;
         hlt::get_sstream() >> current_player_id >> num_ships >> num_dropoffs >> halite;
 
-        players[current_player_id]->_update(num_ships, num_dropoffs, halite);
+        players[current_player_id]->_update(num_ships, num_dropoffs, halite, game_map->width, game_map->height);
     }
 
     game_map->_update();

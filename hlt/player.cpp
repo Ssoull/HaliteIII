@@ -1,12 +1,12 @@
 #include "player.hpp"
 #include "input.hpp"
 
-void hlt::Player::_update(int num_ships, int num_dropoffs, Halite halite) {
+void hlt::Player::_update(int num_ships, int num_dropoffs, Halite halite, int game_width, int game_height) {
     this->halite = halite;
 
     ships.clear();
     for (int i = 0; i < num_ships; ++i) {
-        std::shared_ptr<hlt::Ship> ship = hlt::Ship::_generate(id);
+        std::shared_ptr<hlt::Ship> ship = hlt::Ship::_generate(id, game_width, game_height);
         ships[ship->id] = ship;
     }
 

@@ -22,7 +22,7 @@ namespace hlt {
             halite(0)
         {}
 
-        void _update(int num_ships, int num_dropoffs, Halite halite);
+        void _update(int num_ships, int num_dropoffs, Halite halite, int game_width, int game_height);
         static std::shared_ptr<Player> _generate();
     };
 }

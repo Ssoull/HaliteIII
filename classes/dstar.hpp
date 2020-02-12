@@ -91,6 +91,7 @@ class Dstar {
   bool   replan();
 
   list<state> getPath();
+  state       getNextStep();
 
  private:
 
