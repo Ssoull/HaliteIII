@@ -19,9 +19,9 @@ public:
     Chunk(int coordX, int coordY, std::vector< std::vector<hlt::MapCell> > chunkData);
     
     // GETTER
-    hlt::Halite getLowestCell(); //Used to find the cell with the lowest halite value to set a dropoff on it
+    hlt::MapCell getLowestCell(); //Used to find the cell with the lowest halite value to set a dropoff on it
     float getChunkAverageValue(); //Compute the average halite value in the chunk
-    // void updateChunk(std::vector< std::vector<hlt::MapCell> > chunkData);
+    void updateChunk(std::vector< std::vector<hlt::MapCell> > chunkData);
 };
 
 #endif

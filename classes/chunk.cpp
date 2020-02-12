@@ -32,10 +32,10 @@ void Chunk::computeData(std::vector< std::vector<hlt::MapCell> > chunkData) {
 }
 
 
-hlt::Halite Chunk::getLowestCell() {
+hlt::MapCell Chunk::getLowestCell() {
     hlt::log::log("[Chunk::getLowestCell] Lowest cell position (" + std::to_string(m_mapCell->position.x) + ", " + std::to_string(m_mapCell->position.y) + "), halite amount : " + std::to_string(m_mapCell->halite));
     
-    return m_mapCell->halite;
+    return *m_mapCell;
 }
 
 
@@ -44,4 +44,6 @@ float Chunk::getChunkAverageValue() {
 
     return m_averageHaliteValueFloat;
 }
-// void Chunk::updateChunk(std::vector< std::vector<hlt::MapCell> > chunkData) {}
+void Chunk::updateChunk(std::vector< std::vector<hlt::MapCell> > chunkData) {
+    computeData(chunkData);
+}
