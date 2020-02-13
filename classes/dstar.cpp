@@ -178,15 +178,28 @@ void Dstar::setRHS(state u, double rhs) {
  * Returns the 8-way distance between state a and state b.
  */
 double Dstar::eightCondist(state a, state b) {
-  double temp;
-  double min = fabs(a.x - b.x);
-  double max = fabs(a.y - b.y);
-  if (min > max) {
-    double temp = min;
-    min = max;
-    max = temp;
+  // double temp;
+  // double min = fabs(a.x - b.x);
+  // double max = fabs(a.y - b.y);
+  // if (min > max) {
+  //   double temp = min;
+  //   min = max;
+  //   max = temp;
+  // }
+  // return ((M_SQRT2-1.0)*min + max);
+
+  // Working on a solution to implement toroidal distance
+  int dx = std::abs(b.x - a.x);
+  int dy = std::abs(b.y - a.y);
+  if(dx > (mapSizeX+1)/2){
+    dx = mapSizeX+1 - dx;
   }
-  return ((M_SQRT2-1.0)*min + max);
+  if(dy > (mapSizeY+1)/2){
+    dy = mapSizeY+1 - dy;
+  }
+
+  return std::sqrt((dx*dx )+ (dy*dy));
+
 }
 
 /* int Dstar::computeShortestPath()
@@ -566,7 +579,7 @@ bool Dstar::replan() {
   int res = computeShortestPath();
   //printf("res: %d ols: %d ohs: %d tk: [%f %f] sk: [%f %f] sgr: (%f,%f)\n",res,openList.size(),openHash.size(),openList.top().k.first,openList.top().k.second, s_start.k.first, s_start.k.second,getRHS(s_start),getG(s_start));
   if (res < 0) {
-    hlt::log::log("[Dstar::replan] NO PATH TO GOAL");
+    hlt::log::log("[Dstar::replan] NO PATH TO GOAL, REASON : RES < 0");
     return false;
   }
   list<state> n;
@@ -575,7 +588,7 @@ bool Dstar::replan() {
   state cur = s_start;
 
   if (isinf(getG(s_start))) {
-    hlt::log::log("[Dstar::replan] NO PATH TO GOAL");
+    hlt::log::log("[Dstar::replan] NO PATH TO GOAL REASON : G VALUE");
     return false;
   }
 
@@ -585,7 +598,7 @@ bool Dstar::replan() {
     getSucc(cur, n);
 
     if (n.empty()) {
-      hlt::log::log("[Dstar::replan] NO PATH TO GOAL");
+      hlt::log::log("[Dstar::replan] NO PATH TO GOAL REASON : EMPTY");
       return false;
     }
 

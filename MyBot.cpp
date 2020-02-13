@@ -47,8 +47,7 @@ int main(int argc, char* argv[]) {
             if (game_map->cells[ship->position.x][ship->position.y].halite / 10 < ship->halite || game_map->at(ship)->has_structure() || ship->is_full()) {
             // if (game_map->at(ship)->halite < constants::MAX_HALITE / 10 || ship->is_full()) {
                 log::log("[MyBot.cpp] Ship id on movement :" + to_string(ship->id));
-                
-                command_queue.push_back(ship->moveWithPosition(Position(0, 0), carto));
+                command_queue.push_back(ship->moveWithPosition(Position(8, 31), carto));
                 // command_queue.push_back(ship->move(game.game_map->naive_navigate(ship, Position(0, 0))));
             } else {
                 command_queue.push_back(ship->stay_still());
