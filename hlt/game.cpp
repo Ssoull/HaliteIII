@@ -25,7 +25,7 @@ void hlt::Game::ready(const std::string& name) {
     std::cout << name << std::endl;
 }
 
-void hlt::Game::update_frame() {
+void hlt::Game::update_frame(std::unique_ptr<Cartography>& carto) {
     hlt::get_sstream() >> turn_number;
     log::log("=============== TURN " + std::to_string(turn_number) + " ================");
 
@@ -45,6 +45,8 @@ void hlt::Game::update_frame() {
         for (auto& ship_iterator : player->ships) {
             auto ship = ship_iterator.second;
             game_map->cells[ship->position.x][ship->position.y].mark_unsafe(ship);
+
+            carto->markAsUnsafe(*ship);
         }
 
         game_map->at(player->shipyard)->structure = player->shipyard;
@@ -52,6 +54,7 @@ void hlt::Game::update_frame() {
         for (auto& dropoff_iterator : player->dropoffs) {
             auto dropoff = dropoff_iterator.second;
             game_map->at(dropoff)->structure = dropoff;
+            carto->markStructure(*dropoff);
         }
     }
 }

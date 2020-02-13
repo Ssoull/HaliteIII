@@ -3,7 +3,6 @@
 #include "hlt/log.hpp"
 #include "classes/chunk.hpp"
 #include "classes/dstar.hpp"
-#include "classes/cartography.hpp"
 
 #include <random>
 #include <ctime>
@@ -29,36 +28,27 @@ int main(int argc, char* argv[]) {
 
     log::log("Successfully created bot! My Player ID is " + to_string(game.my_id) + ". Bot rng seed is " + to_string(rng_seed) + ".");
     Chunk chunk(0, 10, game.game_map->getCells());
-    chunk.getLowestCell();
-
-    //Dstar test
-    // Dstar *testDstar = new Dstar(game.game_map->width, game.game_map->height);
-    Dstar *testDstar = new Dstar(6, 6);
-    testDstar->init(0,0,5,5);
-    list<state> myPath;
-    log::log(to_string(myPath.size()));
-    testDstar->replan();
-    myPath = testDstar->getPath();
-    
+    chunk.getLowestCell();    
 
     for (;;) {
-        game.update_frame();
+        unique_ptr<Cartography> carto = unique_ptr<Cartography>(new Cartography());
+        game.update_frame(carto);
         shared_ptr<Player> me = game.me;
         shared_ptr<GameMap>& game_map = game.game_map;
 
         vector<Command> command_queue;
 
-        Cartography *carto = new Cartography();
-        carto->updateCartographyData(game_map);
+        
+        // carto->updateCartographyData(game_map);
         // log::log("Number of unsafe cells : " + to_string(carto->getUnsafeCells()->size()));
 
         for (const auto& ship_iterator : me->ships) {
             shared_ptr<Ship> ship = ship_iterator.second;
-            if (game_map->at(ship)->halite < constants::MAX_HALITE / 10 || ship->is_full()) {
-                Direction random_direction = ALL_CARDINALS[3];
+            if (game_map->cells[ship->position.x][ship->position.y].halite / 10 < ship->halite || game_map->at(ship)->has_structure() || ship->is_full()) {
+            // if (game_map->at(ship)->halite < constants::MAX_HALITE / 10 || ship->is_full()) {
                 log::log("[MyBot.cpp] Ship id on movement :" + to_string(ship->id));
-
-                command_queue.push_back(ship->moveWithPosition(Position(0, 0)));
+                
+                command_queue.push_back(ship->moveWithPosition(Position(0, 0), carto));
                 // command_queue.push_back(ship->move(game.game_map->naive_navigate(ship, Position(0, 0))));
             } else {
                 command_queue.push_back(ship->stay_still());

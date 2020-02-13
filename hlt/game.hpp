@@ -3,6 +3,7 @@
 #include "game_map.hpp"
 #include "player.hpp"
 #include "types.hpp"
+#include "../classes/cartography.hpp"
 
 #include <vector>
 #include <iostream>
@@ -17,7 +18,7 @@ namespace hlt {
 
         Game();
         void ready(const std::string& name);
-        void update_frame();
+        void update_frame(std::unique_ptr<Cartography>& carto);
         bool end_turn(const std::vector<Command>& commands);
     };
 }

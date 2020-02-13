@@ -1,17 +1,17 @@
 #pragma once
 
+#include "../classes/cartography.hpp"
 #include "entity.hpp"
 #include "constants.hpp"
 #include "command.hpp"
 
 #include "../classes/dstar.hpp"
-
 #include <memory>
 
 namespace hlt {
     struct Ship : Entity {
         Halite halite;
-        unique_ptr<Dstar> pathToGoal;
+        std::unique_ptr<Dstar> pathToGoal;
 
         Ship(PlayerId player_id, EntityId ship_id, int x, int y, Halite halite, int game_width, int game_height) :
             Entity(player_id, ship_id, x, y),
@@ -31,8 +31,20 @@ namespace hlt {
             return hlt::command::move(id, direction);
         }
 
-        Command moveWithPosition(Position pos) {
+        Command moveWithPosition(Position pos, std::unique_ptr<Cartography>& carto) {
             pathToGoal->init(position.x, position.y, pos.x, pos.y);
+
+            std::vector<hlt::Entity> unsafeCells = carto->getUnsafeCells();
+
+            for (int i = 0; i <unsafeCells.size(); ++i) {
+                if (position != unsafeCells[i].position) {
+                    pathToGoal->updateCell(unsafeCells[i].position.x, unsafeCells[i].position.y, -1);
+                }
+
+                log::log("Unsafe Cells : " + std::to_string(unsafeCells[i].position.x) + ", " + std::to_string(unsafeCells[i].position.y));
+            }
+            
+
             pathToGoal->replan();
             list<state> list = pathToGoal->getPath();
             list.pop_front();
@@ -47,6 +59,9 @@ namespace hlt {
 
             log::log("NEXTSTEP : " + std::to_string(nextStep.x) + ", " + std::to_string(nextStep.y) + ", ID SHIP : " + std::to_string(id));
             log::log("CURRENT : " + std::to_string(position.x) + ", " + std::to_string(position.y));
+
+            // carto->markAsSafe(id);
+            carto->markAsUnsafe(Entity(owner, id, nextStep.x, nextStep.y));
 
             int tempX = nextStep.x - position.x;
             int tempY = nextStep.y - position.y;
