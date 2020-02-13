@@ -36,16 +36,19 @@ namespace hlt {
 
             std::vector<hlt::Entity> unsafeCells = carto->getUnsafeCells();
 
+            log::log("Current cell : " + std::to_string(position.x) + ", " + std::to_string(position.y));
             for (int i = 0; i <unsafeCells.size(); ++i) {
                 if (position != unsafeCells[i].position) {
                     pathToGoal->updateCell(unsafeCells[i].position.x, unsafeCells[i].position.y, -1);
                 }
-
+                
                 log::log("Unsafe Cells : " + std::to_string(unsafeCells[i].position.x) + ", " + std::to_string(unsafeCells[i].position.y));
             }
             
 
-            pathToGoal->replan();
+            if(!pathToGoal->replan()){
+                return hlt::command::move(id, hlt::Direction::STILL);
+            }
             list<state> list = pathToGoal->getPath();
             list.pop_front();
 
@@ -66,7 +69,7 @@ namespace hlt {
             int tempX = nextStep.x - position.x;
             int tempY = nextStep.y - position.y;
             if(tempX != 0){
-                if(tempX){
+                if(tempX < 0){
                     return hlt::command::move(id, hlt::Direction::WEST);
                 }
                 else{
@@ -74,7 +77,7 @@ namespace hlt {
                 }
             }
             if(tempY !=0){
-                if(tempY){
+                if(tempY < 0){
                     return hlt::command::move(id, hlt::Direction::NORTH);
                 }
                 else{

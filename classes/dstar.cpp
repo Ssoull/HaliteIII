@@ -466,21 +466,15 @@ void Dstar::getPred(state u,list<state> &s) {
 
   u.x += 1;
   if (!occupied(u)) s.push_front(u);
+  u.x -= 1;
   u.y += 1;
   if (!occupied(u)) s.push_front(u);
   u.x -= 1;
-  if (!occupied(u)) s.push_front(u);
-  u.x -= 1;
-  if (!occupied(u)) s.push_front(u);
-  u.y -= 1;
-  if (!occupied(u)) s.push_front(u);
   u.y -= 1;
   if (!occupied(u)) s.push_front(u);
   u.x += 1;
+  u.y -= 1;
   if (!occupied(u)) s.push_front(u);
-  u.x += 1;
-  if (!occupied(u)) s.push_front(u);
-
 }
 
 /* void Dstar::updateStart(int x, int y)
