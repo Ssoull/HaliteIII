@@ -10,7 +10,7 @@ __pycache__/
 *.ipr
 *.iws
 Fluorine.exe.lnk
-obj/
+obj/**
 tools/
 make.bat
 .vscode/
