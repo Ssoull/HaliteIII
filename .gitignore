@@ -9,6 +9,7 @@ __pycache__/
 *.class
 *.ipr
 *.iws
+Fluorine.exe.lnk
 obj/
 tools/
 make.bat
