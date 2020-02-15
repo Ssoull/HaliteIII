@@ -7,17 +7,17 @@
 
 class Ship : public Entity
 {
-    private:
-    int m_halite;
-    Position m_pos;
+private:
+  int m_halite;
+  Position m_pos;
 
-    public:
-    Ship(const int ownerId, const int entityId, const Position &pos, const int halite);
-    bool isFull();
-    std::string makeDropoff() const;
-    std::string move(const Direction direction) const;
-    std::string stayStill() const;
-    static std::shared_ptr<Ship> generate(const int playerID);
+public:
+  Ship(const int ownerId, const int entityId, const Position &pos, const int halite);
+  bool isFull();
+  std::string makeDropoff() const;
+  std::string move(const Direction direction) const;
+  std::string stayStill() const;
+  static std::shared_ptr<Ship> generate(const int playerID);
 };
 
 #endif

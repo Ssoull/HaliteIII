@@ -5,7 +5,6 @@
 
 class Entity
 {
-private:
 protected:
   int m_playerID, m_entityId;
   Position m_position;

@@ -8,20 +8,19 @@
 
 class GameMap
 {
-    private:
-    int m_width, m_height;
-    std::vector<std::vector<MapCell>> m_cells;
+private:
+  int m_width, m_height;
+  std::vector<std::vector<MapCell>> m_cells;
 
-    public:
+public:
+  GameMap();
+  MapCell *at(const Position &position);
+  MapCell *at(const Entity &entity);
+  MapCell *at(const Entity *entity);
+  MapCell *at(const std::shared_ptr<Entity> entity);
 
-    GameMap();
-    MapCell *at(const Position &position);
-    MapCell *at(const Entity &entity);
-    MapCell *at(const Entity *entity);
-    MapCell *at(const std::shared_ptr<Entity> entity);
-
-    void update();
-    static std::unique_ptr<GameMap> generate();
+  void update();
+  static std::shared_ptr<GameMap> generate();
 };
 
 #endif

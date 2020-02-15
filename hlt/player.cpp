@@ -10,13 +10,15 @@ void Player::update(const int numShips, const int numDropoffs, const int halite)
   m_halite = halite;
 
   m_ships.clear();
-  for (int i = 0; i < numShips; ++i) {
+  for (int i = 0; i < numShips; ++i)
+  {
     std::shared_ptr<Ship> ship = Ship::generate(m_id);
     m_ships[ship->getId()] = ship;
   }
 
   m_dropoffs.clear();
-  for (int i = 0; i < numDropoffs; ++i) {
+  for (int i = 0; i < numDropoffs; ++i)
+  {
     std::shared_ptr<Dropoff> dropoff = Dropoff::generate(m_id);
     m_dropoffs[dropoff->getId()] = dropoff;
   }
@@ -40,7 +42,7 @@ std::unordered_map<int, std::shared_ptr<Ship>> Player::getShips() const
 
 std::unordered_map<int, std::shared_ptr<Dropoff>> Player::getDropoffs() const
 {
-    return m_dropoffs;
+  return m_dropoffs;
 }
 
 std::shared_ptr<Shipyard> Player::getShipyard() const
@@ -48,6 +50,7 @@ std::shared_ptr<Shipyard> Player::getShipyard() const
   return m_shipyard;
 }
 
-int Player::getHalite(){
+int Player::getHalite()
+{
   return m_halite;
 }

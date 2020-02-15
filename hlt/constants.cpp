@@ -55,7 +55,7 @@ static bool get_bool(std::unordered_map<std::string, std::string> &map, const st
   }
 
   custom_logger::log("Error: constants: " + key + " constant has value of '" + string_value +
-           "' from server. Do not know how to parse that as boolean.");
+                     "' from server. Do not know how to parse that as boolean.");
   exit(1);
 }
 

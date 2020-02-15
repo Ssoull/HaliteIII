@@ -18,7 +18,7 @@ bool MapCell::hasStructure() const
   return m_hasStructure;
 }
 
-int MapCell::getHalite() const 
+int MapCell::getHalite() const
 {
   return m_halite;
 }
@@ -29,7 +29,7 @@ void MapCell::setHalite(const int halite)
   m_halite = halite;
 }
 
-void MapCell::markShip(bool hasShip) 
+void MapCell::markShip(bool hasShip)
 {
   m_hasShip = hasShip;
 }

@@ -7,12 +7,9 @@
 class Dropoff : public Entity
 {
 public:
-    Dropoff(const int ownerId, const int entityId, const Position &pos);
+  Dropoff(const int ownerId, const int entityId, const Position &pos);
 
-    static std::shared_ptr<Dropoff> generate(const int playerId);
+  static std::shared_ptr<Dropoff> generate(const int playerId);
 };
-
-
-
 
 #endif
