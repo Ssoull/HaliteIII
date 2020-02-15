@@ -1,6 +1,8 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
+#include "position.hpp"
+
 #include <string>
 
 const char GENERATE = 'g';
@@ -10,9 +12,9 @@ const char MOVE[] = "m ";
 class Command
 {
 public:
-    static std::string staticSpawnShip();
-    static std::string staticTransformShipIntoDropoff(int id);
-    static std::string move(int id);
+  static std::string spawnShip();
+  static std::string transformShipIntoDropoff(const int id);
+  static std::string move(const int id, const Direction direction);
 };
 
 #endif

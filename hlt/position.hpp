@@ -3,6 +3,14 @@
 
 #include <iostream>
 
+enum class Direction : char {
+    NORTH = 'n',
+    EAST = 'e',
+    SOUTH = 's',
+    WEST = 'w',
+    STILL = 'o',
+};
+
 class Position
 {
 private:

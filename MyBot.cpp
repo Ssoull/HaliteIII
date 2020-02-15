@@ -6,7 +6,6 @@
 #include <ctime>
 
 using namespace std;
-using namespace hlt;
 
 int main(int argc, char* argv[]) {
     unsigned int rng_seed;
@@ -23,31 +22,31 @@ int main(int argc, char* argv[]) {
     // As soon as you call "ready" function below, the 2 second per turn timer will start.
     game.ready("MyCppBot");
 
-    log::log("Successfully created bot! My Player ID is " + to_string(game.my_id) + ". Bot rng seed is " + to_string(rng_seed) + ".");
+    custom_logger::log("Successfully created bot! My Player ID is " + to_string(game.getId()) + ". Bot rng seed is " + to_string(rng_seed) + ".");
 
     for (;;) {
         game.update_frame();
-        shared_ptr<Player> me = game.me;
-        unique_ptr<GameMap>& game_map = game.game_map;
+        shared_ptr<Player> me = game.getMe();
+        unique_ptr<GameMap>& game_map = game.getGameMap();
 
-        vector<Command> command_queue;
+        vector<std::string> command_queue;
 
-        for (const auto& ship_iterator : me->ships) {
+        for (const auto& ship_iterator : me->getShips()) {
             shared_ptr<Ship> ship = ship_iterator.second;
-            if (game_map->at(ship)->halite < constants::MAX_HALITE / 10 || ship->is_full()) {
+            if (game_map->at(ship)->halite < constants::MAX_HALITE / 10 || ship->isFull()) {
                 Direction random_direction = ALL_CARDINALS[rng() % 4];
                 command_queue.push_back(ship->move(random_direction));
             } else {
-                command_queue.push_back(ship->stay_still());
+                command_queue.push_back(ship->stayStill());
             }
         }
 
         if (
-            game.turn_number <= 200 &&
-            me->halite >= constants::SHIP_COST &&
-            !game_map->at(me->shipyard)->is_occupied())
+            game.getTurnNumber() <= 200 &&
+            me->getHalite() >= constants::SHIP_COST &&
+            !game_map->at(me->getShipyard())->is_occupied())
         {
-            command_queue.push_back(me->shipyard->spawn());
+            command_queue.push_back(me->getShipyard->spawn());
         }
 
         if (!game.end_turn(command_queue)) {
