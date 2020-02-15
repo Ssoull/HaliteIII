@@ -1,16 +1,18 @@
-#pragma once
-
-#include "direction.hpp"
-#include "types.hpp"
+#ifndef COMMAND_H
+#define COMMAND_H
 
 #include <string>
 
-namespace hlt {
-    typedef std::string Command;
+const char GENERATE = 'g';
+const char CONSTRUCT[] = "c ";
+const char MOVE[] = "m ";
 
-    namespace command {
-        Command spawn_ship();
-        Command transform_ship_into_dropoff_site(EntityId id);
-        Command move(EntityId id, Direction direction);
-    }
-}
+class Command
+{
+public:
+    static std::string staticSpawnShip();
+    static std::string staticTransformShipIntoDropoff(int id);
+    static std::string move(int id);
+};
+
+#endif

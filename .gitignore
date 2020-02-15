@@ -9,3 +9,7 @@ __pycache__/
 *.class
 *.ipr
 *.iws
+obj/
+tools/
+make.bat
+.vscode/
