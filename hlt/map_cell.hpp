@@ -15,16 +15,16 @@ private:
 public:
   MapCell(const Position &pos, const int halite);
 
-  void markShip(const bool hasShip);
-  void markStructure(const bool hasStructure);
-
   // Getter
   bool isEmpty() const;
   bool isOccupied() const;
   bool hasStructure() const;
+  int getHalite() const;
 
   // Setter
-  int setHalite(const int halite);
+  void setHalite(const int halite);
+  void markShip(const bool hasShip);
+  void markStructure(const bool hasStructure);
 };
 
 #endif

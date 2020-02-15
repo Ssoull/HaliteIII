@@ -27,15 +27,15 @@ int main(int argc, char* argv[]) {
     for (;;) {
         game.update_frame();
         shared_ptr<Player> me = game.getMe();
-        unique_ptr<GameMap>& game_map = game.getGameMap();
+        // unique_ptr<GameMap>& game_map = game.getGameMap();
 
         vector<std::string> command_queue;
 
         for (const auto& ship_iterator : me->getShips()) {
             shared_ptr<Ship> ship = ship_iterator.second;
-            if (game_map->at(ship)->halite < constants::MAX_HALITE / 10 || ship->isFull()) {
-                Direction random_direction = ALL_CARDINALS[rng() % 4];
-                command_queue.push_back(ship->move(random_direction));
+            if (game.getGameMap()->at(ship)->getHalite() < constants::MAX_HALITE / 10 || ship->isFull()) {
+                // Direction random_direction = ALL_CARDINALS[rng() % 4];
+                // command_queue.push_back(ship->move(random_direction));
             } else {
                 command_queue.push_back(ship->stayStill());
             }
@@ -44,9 +44,9 @@ int main(int argc, char* argv[]) {
         if (
             game.getTurnNumber() <= 200 &&
             me->getHalite() >= constants::SHIP_COST &&
-            !game_map->at(me->getShipyard())->is_occupied())
+            !game.getGameMap()->at(me->getShipyard())->isOccupied())
         {
-            command_queue.push_back(me->getShipyard->spawn());
+            command_queue.push_back(me->getShipyard()->spawn());
         }
 
         if (!game.end_turn(command_queue)) {

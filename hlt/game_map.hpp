@@ -14,9 +14,11 @@ class GameMap
 
     public:
 
+    GameMap();
     MapCell *at(const Position &position);
     MapCell *at(const Entity &entity);
     MapCell *at(const Entity *entity);
+    MapCell *at(const std::shared_ptr<Entity> entity);
 
     void update();
     static std::unique_ptr<GameMap> generate();

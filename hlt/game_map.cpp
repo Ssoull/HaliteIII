@@ -1,21 +1,29 @@
 #include "game_map.hpp"
 #include "input.hpp"
 
-MapCell* GameMap::at(const Position &position)
+GameMap::GameMap(){
+  
+}
+
+MapCell *GameMap::at(const Position &position)
 {
   return &m_cells[position.getXCoord()][position.getYCoord()];
 }
 
-MapCell* GameMap::at(const Entity &entity)
+MapCell *GameMap::at(const Entity &entity)
 {
   return(at(entity.getPosition()));
 }
 
-MapCell* GameMap::at(const Entity *entity)
+MapCell *GameMap::at(const Entity *entity)
 {
   return at(entity->getPosition());
 }
 
+MapCell *GameMap::at(const std::shared_ptr<Entity> entity)
+{
+  return at(entity->getPosition());
+}
 
 void GameMap::update()
 {
