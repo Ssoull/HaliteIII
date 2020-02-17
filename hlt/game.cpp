@@ -52,13 +52,12 @@ void Game::update_frame()
       m_gameMap->at(*ship)->markShip(true);
     }
 
-    //TODO: Make an another method named markShipyard
-    m_gameMap->at(*player->getShipyard())->markStructure(true);
+    m_gameMap->at(*player->getShipyard())->markShipYard(true);
 
     for (auto &dropoff_iterator : player->getDropoffs())
     {
       auto dropoff = dropoff_iterator.second;
-      m_gameMap->at(*dropoff)->markStructure(true);
+      m_gameMap->at(*dropoff)->markDropoff(true);
     }
   }
 }

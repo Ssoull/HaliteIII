@@ -1,11 +1,17 @@
 #include "map_cell.hpp"
 
-MapCell::MapCell(const Position &pos, const int halite) : m_position(pos), m_halite(halite) {}
+MapCell::MapCell(const Position &pos, const int halite) : 
+  m_position(pos), 
+  m_halite(halite),
+  m_hasShip(false),
+  m_hasShipyard(false), 
+  m_hasDropoff(false)
+{}
 
 // Getter
 bool MapCell::isEmpty() const
 {
-  return !m_hasShip || !m_hasStructure;
+  return !m_hasShip || !m_hasDropoff ||!m_hasShipyard;
 }
 
 bool MapCell::isOccupied() const
@@ -13,9 +19,14 @@ bool MapCell::isOccupied() const
   return m_hasShip;
 }
 
-bool MapCell::hasStructure() const
+bool MapCell::hasShipyard() const
 {
-  return m_hasStructure;
+  return m_hasShipyard;
+}
+
+bool MapCell::hasDropoff() const
+{
+  return m_hasDropoff;
 }
 
 int MapCell::getHalite() const
@@ -34,7 +45,12 @@ void MapCell::markShip(bool hasShip)
   m_hasShip = hasShip;
 }
 
-void MapCell::markStructure(bool hasStructure)
+void MapCell::markShipYard(bool hasShipyard)
 {
-  m_hasStructure = hasStructure;
+  m_hasShip = hasShipyard;
+}
+
+void MapCell::markDropoff(bool hasDropoff)
+{
+  m_hasDropoff = hasDropoff;
 }
