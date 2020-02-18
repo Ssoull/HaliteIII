@@ -24,6 +24,7 @@ public:
 
   static std::shared_ptr<Ship> generate(const int playerID);
   void update(const Ship *ship);
+  void setState(State *nextState);
 
   // Getter
   bool isFull();

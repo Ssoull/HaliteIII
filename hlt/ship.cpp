@@ -44,3 +44,10 @@ bool Ship::isFull()
 {
   return m_halite >= constants::MAX_HALITE;
 }
+
+void Ship::setState(State *nextState){
+  m_shipState->onStateExit();
+  m_shipState = nextState;
+  m_shipState->onStateEnter();
+}
+
