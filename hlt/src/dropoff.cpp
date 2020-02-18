@@ -1,6 +1,6 @@
 #include "dropoff.hpp"
 
-#include "input.hpp"
+#include "../utils/input.hpp"
 
 Dropoff::Dropoff(const int ownerId, const int entityId, const Position &pos) : Entity(ownerId, entityId, pos) {}
 

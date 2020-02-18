@@ -1,19 +1,23 @@
 #include "harvestingState.hpp"
-#include "../log.hpp"
 
+#include "../utils/log.hpp"
 
-void HarvestingState::update(){
+void HarvestingState::update()
+{
     // custom_logger::log("Update");
 }
 
-void HarvestingState::update(Entity *entityToUpdate){
+void HarvestingState::update(Ship *entityToUpdate)
+{
     //Update state here with entity data
 }
 
-void HarvestingState::onStateEnter(){
+void HarvestingState::onStateEnter()
+{
     //Actions to perform on state enter (e g : set target...)
 }
 
-void HarvestingState::onStateExit(){
+void HarvestingState::onStateExit()
+{
     //Actions to perform on state exit
 }

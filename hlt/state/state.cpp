@@ -3,20 +3,16 @@ State::State() {}
 
 void State::update()
 {
-    return;
 }
 
-void State::update(Entity *entityToUpdate)
+void State::update(Ship *shipToUpdate)
 {
-    return;
 }
 
 void State::onStateEnter()
 {
-    return;
 }
 
 void State::onStateExit()
 {
-    return;
 }

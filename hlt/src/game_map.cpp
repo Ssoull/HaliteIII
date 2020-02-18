@@ -1,5 +1,6 @@
 #include "game_map.hpp"
-#include "input.hpp"
+
+#include "../utils/input.hpp"
 
 GameMap::GameMap()
 {

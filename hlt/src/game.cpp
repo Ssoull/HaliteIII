@@ -1,8 +1,8 @@
 #include "game.hpp"
 
-#include "input.hpp"
-#include "constants.hpp"
-#include "log.hpp"
+#include "../utils/input.hpp"
+#include "../utils/constants.hpp"
+#include "../utils/log.hpp"
 
 Game::Game() : m_turnNumber(0)
 {

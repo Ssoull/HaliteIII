@@ -2,7 +2,8 @@
 #define SHIPYARD_H
 
 #include "entity.hpp"
-#include "command.hpp"
+
+#include "../utils/command.hpp"
 
 #include <string>
 

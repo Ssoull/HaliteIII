@@ -1,6 +1,6 @@
-#include "hlt/game.hpp"
-#include "hlt/constants.hpp"
-#include "hlt/log.hpp"
+#include "hlt/src/game.hpp"
+#include "hlt/utils/constants.hpp"
+#include "hlt/utils/log.hpp"
 
 #include <random>
 #include <ctime>

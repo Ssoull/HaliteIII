@@ -1,4 +1,5 @@
 #include "constants.hpp"
+
 #include "log.hpp"
 
 #include <unordered_map>

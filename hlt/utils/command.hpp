@@ -1,7 +1,7 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
-#include "position.hpp"
+#include "../src/position.hpp"
 
 #include <string>
 

@@ -1,5 +1,6 @@
 #include "player.hpp"
-#include "input.hpp"
+
+#include "../utils/input.hpp"
 
 #include <memory>
 
@@ -60,7 +61,7 @@ void Player::updateDropoffs(const int numEntities)
     std::shared_ptr<Dropoff> dropoff = Dropoff::generate(m_id);
     id_dropoffs.push_back(dropoff->getId());
 
-    // If there is no ship with this id, we add him to the vector
+    // If there is no dropoff with this id, we add him to the vector
     if (m_dropoffs.find(dropoff->getId()) == m_dropoffs.end())
     {
       m_dropoffs[dropoff->getId()] = dropoff;

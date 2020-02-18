@@ -1,13 +1,11 @@
 #include "ship.hpp"
-#include "constants.hpp"
-#include "input.hpp"
-#include "state/harvestingState.hpp"
 
-Ship::Ship(const int ownerId, const int entityId, const Position &pos, const int halite) : Entity(ownerId, entityId, pos)
-{
-  m_position = pos;
-  m_shipState = new HarvestingState;
-}
+#include "../utils/constants.hpp"
+#include "../utils/input.hpp"
+
+#include "../state/harvestingState.hpp"
+
+Ship::Ship(const int ownerId, const int entityId, const Position &pos, const int halite) : Entity(ownerId, entityId, pos), m_halite(halite), m_shipState(new HarvestingState()) {}
 
 // Action
 std::string Ship::makeDropoff() const
@@ -34,9 +32,16 @@ std::shared_ptr<Ship> Ship::generate(const int playerId)
 
 void Ship::update(const Ship *ship)
 {
-  m_shipState->update();
+  m_shipState->update(this);
   m_halite = ship->m_halite;
   m_position = ship->m_position;
+}
+
+void Ship::setState(State *nextState)
+{
+  m_shipState->onStateExit();
+  m_shipState = nextState;
+  m_shipState->onStateEnter();
 }
 
 // Getter
@@ -44,10 +49,3 @@ bool Ship::isFull()
 {
   return m_halite >= constants::MAX_HALITE;
 }
-
-void Ship::setState(State *nextState){
-  m_shipState->onStateExit();
-  m_shipState = nextState;
-  m_shipState->onStateEnter();
-}
-
