@@ -1,10 +1,12 @@
 #include "ship.hpp"
 #include "constants.hpp"
 #include "input.hpp"
+#include "state/harvestingState.hpp"
 
 Ship::Ship(const int ownerId, const int entityId, const Position &pos, const int halite) : Entity(ownerId, entityId, pos)
 {
   m_position = pos;
+  m_shipState = new HarvestingState;
 }
 
 // Action
@@ -32,6 +34,7 @@ std::shared_ptr<Ship> Ship::generate(const int playerId)
 
 void Ship::update(const Ship *ship)
 {
+  m_shipState->update();
   m_halite = ship->m_halite;
   m_position = ship->m_position;
 }

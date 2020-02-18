@@ -4,11 +4,14 @@
 #include "entity.hpp"
 #include "position.hpp"
 #include "command.hpp"
+#include "state/state.hpp"
 
 class Ship : public Entity
 {
 private:
   int m_halite;
+  State *m_shipState;
+
 
 public:
   Ship(const int ownerId, const int entityId, const Position &pos, const int halite);

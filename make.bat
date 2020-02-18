@@ -41,3 +41,4 @@ cl.exe /FeMyBot.exe /std:c++14 /O2 /MT /EHsc /I . /Fo.\obj\ ^
  /D_USE_MATH_DEFINES ^
  .\hlt\*.cpp ^
  .\MyBot.cpp ^
+ .\hlt\state\*.cpp
