@@ -8,19 +8,64 @@ Player::Player(const int playerId, const Position &pos) : m_id(playerId), m_hali
 void Player::update(const int numShips, const int numDropoffs, const int halite)
 {
   m_halite = halite;
+  updateShips(numShips);
+  updateDropoffs(numDropoffs);
+}
 
-  m_ships.clear();
+void Player::updateShips(const int numShips)
+{
+  std::vector<int> id_ships;
+
+  // Create or update ships
   for (int i = 0; i < numShips; ++i)
   {
     std::shared_ptr<Ship> ship = Ship::generate(m_id);
-    m_ships[ship->getId()] = ship;
+    id_ships.push_back(ship->getId());
+
+    // If there is no ship with this id, we add him to the vector
+    if (m_ships.find(ship->getId()) == m_ships.end())
+    {
+      m_ships[ship->getId()] = ship;
+      custom_logger::log("[Player::updateShips] Ship created, id " + std::to_string(ship->getId()));
+    }
+    else
+    {
+      m_ships[ship->getId()]->update(ship.get());
+      custom_logger::log("[Player::updateShips] Ship updated, id " + std::to_string(ship->getId()));
+    }
   }
 
-  m_dropoffs.clear();
-  for (int i = 0; i < numDropoffs; ++i)
+  // Delete destroyed ship
+  for (auto it = m_ships.begin(); it != m_ships.end();)
+  {
+    if (std::find(id_ships.begin(), id_ships.end(), it->first) == id_ships.end())
+    {
+      it = m_ships.erase(it);
+      custom_logger::log("[Player::updateShips] Ship erased, id : " + std::to_string(it->first));
+    }
+    else
+    {
+      ++it;
+    }
+  }
+}
+
+void Player::updateDropoffs(const int numEntities)
+{
+  std::vector<int> id_dropoffs;
+
+  // Create or update dropoff
+  for (int i = 0; i < numEntities; ++i)
   {
     std::shared_ptr<Dropoff> dropoff = Dropoff::generate(m_id);
-    m_dropoffs[dropoff->getId()] = dropoff;
+    id_dropoffs.push_back(dropoff->getId());
+
+    // If there is no ship with this id, we add him to the vector
+    if (m_dropoffs.find(dropoff->getId()) == m_dropoffs.end())
+    {
+      m_dropoffs[dropoff->getId()] = dropoff;
+      custom_logger::log("[Player::updateDropoffs] Dropoff created, id " + std::to_string(dropoff->getId()));
+    }
   }
 }
 

@@ -20,11 +20,6 @@ MapCell *GameMap::at(const Entity *entity)
   return at(entity->getPosition());
 }
 
-MapCell *GameMap::at(const std::shared_ptr<Entity> entity)
-{
-  return at(entity->getPosition());
-}
-
 void GameMap::update()
 {
   for (int y = 0; y < m_height; ++y)

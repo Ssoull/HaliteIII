@@ -4,14 +4,10 @@
 
 Ship::Ship(const int ownerId, const int entityId, const Position &pos, const int halite) : Entity(ownerId, entityId, pos)
 {
-  m_pos = pos;
+  m_position = pos;
 }
 
-bool Ship::isFull()
-{
-  return m_halite >= constants::MAX_HALITE;
-}
-
+// Action
 std::string Ship::makeDropoff() const
 {
   return Command::transformShipIntoDropoff(m_entityId);
@@ -32,4 +28,16 @@ std::shared_ptr<Ship> Ship::generate(const int playerId)
   int ship_id, x, y, halite;
   input::get_sstream() >> ship_id >> x >> y >> halite;
   return std::make_shared<Ship>(playerId, ship_id, Position(x, y), halite);
+}
+
+void Ship::update(const Ship *ship)
+{
+  m_halite = ship->m_halite;
+  m_position = ship->m_position;
+}
+
+// Getter
+bool Ship::isFull()
+{
+  return m_halite >= constants::MAX_HALITE;
 }

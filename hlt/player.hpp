@@ -21,6 +21,8 @@ public:
   Player(const int playerId, const Position &pos);
 
   void update(const int numShips, const int numDropoffs, const int halite);
+  void updateShips(const int numShips);
+  void updateDropoffs(const int numDropoffs);
   static std::shared_ptr<Player> generate();
 
   // Getter

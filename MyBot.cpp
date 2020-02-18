@@ -39,9 +39,9 @@ int main(int argc, char *argv[])
     for (const auto &ship_iterator : me->getShips())
     {
       shared_ptr<Ship> ship = ship_iterator.second;
-      if (game_map->at(ship)->getHalite() < constants::MAX_HALITE / 10 || ship->isFull())
+      if (game_map->at(ship.get())->getHalite() < constants::MAX_HALITE / 10 || ship->isFull())
       {
-        command_queue.push_back(ship->move(Direction::North));
+        command_queue.push_back(ship->move(Direction::East));
       }
       else
       {
@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
     if (
         game.getTurnNumber() <= 200 &&
         me->getHalite() >= constants::SHIP_COST &&
-        !game_map->at(me->getShipyard())->isOccupied())
+        !game_map->at(me->getShipyard().get())->hasShip())
     {
       command_queue.push_back(me->getShipyard()->spawn());
     }

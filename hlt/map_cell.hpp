@@ -19,6 +19,7 @@ public:
   // Getter
   bool isEmpty() const;
   bool isOccupied() const;
+  bool hasShip() const;
   bool hasShipyard() const;
   bool hasDropoff() const;
   int getHalite() const;
@@ -26,7 +27,7 @@ public:
   // Setter
   void setHalite(const int halite);
   void markShip(const bool hasShip);
-  void markShipYard(const bool hasShip);
+  void markShipyard(const bool hasShip);
   void markDropoff(const bool hasDropoff);
 };
 

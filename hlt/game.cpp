@@ -52,7 +52,7 @@ void Game::update_frame()
       m_gameMap->at(*ship)->markShip(true);
     }
 
-    m_gameMap->at(*player->getShipyard())->markShipYard(true);
+    m_gameMap->at(*player->getShipyard())->markShipyard(true);
 
     for (auto &dropoff_iterator : player->getDropoffs())
     {

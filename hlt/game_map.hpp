@@ -17,7 +17,6 @@ public:
   MapCell *at(const Position &position);
   MapCell *at(const Entity &entity);
   MapCell *at(const Entity *entity);
-  MapCell *at(const std::shared_ptr<Entity> entity);
 
   void update();
   static std::shared_ptr<GameMap> generate();
