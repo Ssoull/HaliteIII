@@ -59,7 +59,7 @@ void hlt::Game::update_frame(std::unique_ptr<Cartography>& carto) {
     }
 }
 
-bool hlt::Game::end_turn(const std::vector<hlt::Command>& commands) {
+bool hlt::Game::end_turn(const std::vector<std::string>& commands) {
     for (const auto& command : commands) {
         std::cout << command << ' ';
     }
