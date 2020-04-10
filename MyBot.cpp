@@ -27,21 +27,23 @@ int main(int argc, char *argv[])
   game.ready("MyCppBot");
 
   custom_logger::log("Successfully created bot! My Player ID is " + to_string(game.getId()) + ". Bot rng seed is " + to_string(rng_seed) + ".");
-
+  bool spawn = false;
   for (;;)
   {
     game.update_frame();
+
     shared_ptr<Player> me = game.getMe();
     shared_ptr<GameMap> game_map = game.getGameMap();
 
     vector<std::string> command_queue;
-
     for (const auto &ship_iterator : me->getShips())
     {
       shared_ptr<Ship> ship = ship_iterator.second;
-      if (game_map->at(ship.get())->getHalite() < constants::MAX_HALITE / 10 || ship->isFull())
+
+      if (game_map->at(*ship)->getHalite() / 10 < ship->getHalite() || game_map->at(*ship)->hasStructure() || ship->isFull())
       {
-        command_queue.push_back(ship->move(Direction::East));
+        // command_queue.push_back(ship->move(Direction::North));
+        command_queue.push_back(ship->move(ship->computeNextDirection(Position(0, 0), game_map)));
       }
       else
       {
@@ -54,6 +56,7 @@ int main(int argc, char *argv[])
         me->getHalite() >= constants::SHIP_COST &&
         !game_map->at(me->getShipyard().get())->hasShip())
     {
+      spawn = true;
       command_queue.push_back(me->getShipyard()->spawn());
     }
 

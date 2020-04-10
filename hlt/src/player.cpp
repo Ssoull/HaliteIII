@@ -6,21 +6,21 @@
 
 Player::Player(const int playerId, const Position &pos) : m_id(playerId), m_halite(0), m_shipyard(std::make_shared<Shipyard>(playerId, pos)) {}
 
-void Player::update(const int numShips, const int numDropoffs, const int halite)
+void Player::update(const int numShips, const int numDropoffs, const int halite, const int game_width, const int game_height)
 {
   m_halite = halite;
-  updateShips(numShips);
+  updateShips(numShips, game_width, game_height);
   updateDropoffs(numDropoffs);
 }
 
-void Player::updateShips(const int numShips)
+void Player::updateShips(const int numShips, const int game_width, const int game_height)
 {
   std::vector<int> id_ships;
 
   // Create or update ships
   for (int i = 0; i < numShips; ++i)
   {
-    std::shared_ptr<Ship> ship = Ship::generate(m_id);
+    std::shared_ptr<Ship> ship = Ship::generate(m_id, game_width, game_height);
     id_ships.push_back(ship->getId());
 
     // If there is no ship with this id, we add him to the vector
@@ -55,7 +55,7 @@ void Player::updateDropoffs(const int numEntities)
 {
   std::vector<int> id_dropoffs;
 
-  // Create or update dropoff
+  // Create dropoff
   for (int i = 0; i < numEntities; ++i)
   {
     std::shared_ptr<Dropoff> dropoff = Dropoff::generate(m_id);

@@ -5,7 +5,12 @@
 
 #include "../state/harvestingState.hpp"
 
-Ship::Ship(const int ownerId, const int entityId, const Position &pos, const int halite) : Entity(ownerId, entityId, pos), m_halite(halite), m_shipState(new HarvestingState()) {}
+Ship::Ship(const int ownerId, const int entityId, const Position &pos, const int halite, const int game_width, const int game_height) : Entity(ownerId, entityId, pos),
+                                                                                                                                        m_halite(halite),
+                                                                                                                                        m_shipState(new HarvestingState()),
+                                                                                                                                        m_pathToDest(std::unique_ptr<Dstar>(new Dstar(game_width, game_height)))
+{
+}
 
 // Action
 std::string Ship::makeDropoff() const
@@ -18,16 +23,88 @@ std::string Ship::move(const Direction direction) const
   return Command::move(m_entityId, direction);
 }
 
+Direction Ship::computeNextDirection(const Position &dest, shared_ptr<GameMap> &game_map) const
+{
+  m_pathToDest->initWithPosition(m_position, dest);
+
+  std::vector<Position> unsafeCells = game_map->getUnsafeCells(true, true);
+
+  custom_logger::log("[Ship::computeNextDirection] Ship id : " + std::to_string(m_entityId));
+  custom_logger::log("[Ship::computeNextDirection] Current cell : " + m_position.to_string());
+  custom_logger::log("[Ship::computeNextDirection] Destination cell : " + dest.to_string());
+
+  for (int i = 0; i < unsafeCells.size(); ++i)
+  {
+    if (m_position != unsafeCells[i])
+    {
+      m_pathToDest->updateCell(unsafeCells[i].getXCoord(), unsafeCells[i].getYCoord(), -1);
+      custom_logger::log("[Ship::computeNextDirection] Unsafe Cells : " + unsafeCells[i].to_string());
+    }
+  }
+
+  if (!m_pathToDest->replan())
+  {
+    return Direction::Still;
+  }
+
+  list<state> list = m_pathToDest->getPath();
+  list.pop_front();
+
+  state nextStep;
+
+  if (!list.empty())
+  {
+    nextStep = list.front();
+  }
+  else
+  {
+    nextStep.x = m_position.getXCoord();
+    nextStep.y = m_position.getYCoord();
+  }
+
+  custom_logger::log("[Ship::computeNextDirection] Next Step : " + std::to_string(nextStep.x) + ", " + std::to_string(nextStep.y) + ", ID SHIP : " + std::to_string(m_entityId));
+
+  game_map->at(m_position)->markShip(true);
+
+  int tempX = nextStep.x - m_position.getXCoord();
+  int tempY = nextStep.y - m_position.getYCoord();
+  if (tempX != 0)
+  {
+    if (tempX < 0)
+    {
+      return Direction::West;
+    }
+    else
+    {
+      return Direction::East;
+    }
+  }
+
+  if (tempY != 0)
+  {
+    if (tempY < 0)
+    {
+      return Direction::North;
+    }
+    else
+    {
+      return Direction::South;
+    }
+  }
+
+  return Direction::Still;
+}
+
 std::string Ship::stayStill() const
 {
   return Command::move(m_entityId, Direction::Still);
 }
 
-std::shared_ptr<Ship> Ship::generate(const int playerId)
+std::shared_ptr<Ship> Ship::generate(const int playerId, const int game_width, const int game_height)
 {
   int ship_id, x, y, halite;
   input::get_sstream() >> ship_id >> x >> y >> halite;
-  return std::make_shared<Ship>(playerId, ship_id, Position(x, y), halite);
+  return std::make_shared<Ship>(playerId, ship_id, Position(x, y), halite, game_width, game_height);
 }
 
 void Ship::update(const Ship *ship)
@@ -45,7 +122,12 @@ void Ship::setState(State *nextState)
 }
 
 // Getter
-bool Ship::isFull()
+bool Ship::isFull() const
 {
   return m_halite >= constants::MAX_HALITE;
+}
+
+int Ship::getHalite() const
+{
+  return m_halite;
 }

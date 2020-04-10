@@ -20,8 +20,8 @@ private:
 public:
   Player(const int playerId, const Position &pos);
 
-  void update(const int numShips, const int numDropoffs, const int halite);
-  void updateShips(const int numShips);
+  void update(const int numShips, const int numDropoffs, const int halite, const int game_width, const int game_height);
+  void updateShips(const int numShips, const int game_width, const int game_height);
   void updateDropoffs(const int numDropoffs);
   static std::shared_ptr<Player> generate();
 

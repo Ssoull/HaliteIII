@@ -19,6 +19,11 @@ bool MapCell::isOccupied() const
   return m_hasShip || m_hasShipyard || m_hasDropoff;
 }
 
+bool MapCell::hasStructure() const
+{
+  return m_hasShipyard || m_hasDropoff;
+}
+
 bool MapCell::hasShip() const
 {
   return m_hasShip;
@@ -37,6 +42,11 @@ bool MapCell::hasDropoff() const
 int MapCell::getHalite() const
 {
   return m_halite;
+}
+
+Position MapCell::getPosition() const
+{
+  return m_position;
 }
 
 // Setter

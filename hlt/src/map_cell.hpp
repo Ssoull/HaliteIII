@@ -19,10 +19,12 @@ public:
   // Getter
   bool isEmpty() const;
   bool isOccupied() const;
+  bool hasStructure() const;
   bool hasShip() const;
   bool hasShipyard() const;
   bool hasDropoff() const;
   int getHalite() const;
+  Position getPosition() const;
 
   // Setter
   void setHalite(const int halite);

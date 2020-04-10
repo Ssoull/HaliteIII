@@ -39,7 +39,7 @@ void Game::update_frame()
 
     input::get_sstream() >> current_player_id >> num_ships >> num_dropoffs >> halite;
 
-    m_players[current_player_id]->update(num_ships, num_dropoffs, halite);
+    m_players[current_player_id]->update(num_ships, num_dropoffs, halite, m_gameMap->getWidth(), m_gameMap->getHeight());
   }
 
   m_gameMap->update();
