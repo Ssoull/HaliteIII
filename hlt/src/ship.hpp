@@ -14,6 +14,10 @@ private:
   int m_halite;
   State *m_shipState;
   std::unique_ptr<Dstar> m_pathToDest;
+  //utiilsation de la map en tant que variable, plus pratique si le state a besoin de la map par exemple
+  shared_ptr<GameMap> &m_game_map;
+
+  Direction m_nextMove;
 
 public:
   Ship(const int ownerId, const int entityId, const Position &pos, const int halite, const int game_width, const int game_height);
@@ -26,12 +30,20 @@ public:
   std::string stayStill() const;
 
   static std::shared_ptr<Ship> generate(const int playerID, const int game_width, const int game_height);
+
+  // setter pour la map
+  void setMap(shared_ptr<GameMap> &game_map);
+
+  //Ca sert à quoi de mettre le ship en paramètre ?
+  //Y'a pas moyen de faire sans dans le player ? 
   void update(const Ship *ship);
+  // void update();
   void setState(State *nextState);
 
   // Getter
   bool isFull() const;
   int getHalite() const;
+  std::string getMove();
 };
 
 #endif

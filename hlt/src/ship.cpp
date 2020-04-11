@@ -8,7 +8,8 @@
 Ship::Ship(const int ownerId, const int entityId, const Position &pos, const int halite, const int game_width, const int game_height) : Entity(ownerId, entityId, pos),
                                                                                                                                         m_halite(halite),
                                                                                                                                         m_shipState(new HarvestingState()),
-                                                                                                                                        m_pathToDest(std::unique_ptr<Dstar>(new Dstar(game_width, game_height)))
+                                                                                                                                        m_pathToDest(std::unique_ptr<Dstar>(new Dstar(game_width, game_height))),
+                                                                                                                                        m_game_map(shared_ptr<GameMap>(new GameMap()))
 {
 }
 
@@ -27,6 +28,8 @@ Direction Ship::computeNextDirection(const Position &dest, shared_ptr<GameMap> &
 {
   m_pathToDest->initWithPosition(m_position, dest);
 
+  //comment on l'appelle avec les paramètres ici ? 
+  //Bon move d'ajouter les deux pramètres aussi en signaturede computeNextDirection
   std::vector<Position> unsafeCells = game_map->getUnsafeCells(true, true);
 
   custom_logger::log("[Ship::computeNextDirection] Ship id : " + std::to_string(m_entityId));
@@ -114,6 +117,12 @@ void Ship::update(const Ship *ship)
   m_position = ship->m_position;
 }
 
+//Setters
+
+void Ship::setMap(shared_ptr<GameMap>&game_map){
+  m_game_map = game_map;
+}
+
 void Ship::setState(State *nextState)
 {
   m_shipState->onStateExit();
@@ -122,6 +131,11 @@ void Ship::setState(State *nextState)
 }
 
 // Getter
+std::string Ship::getMove(){
+  return Command::move(m_entityId, computeNextDirection(m_position, m_game_map));
+  // return Command::move(m_entityId, Direction::North);
+}
+
 bool Ship::isFull() const
 {
   return m_halite >= constants::MAX_HALITE;

@@ -39,16 +39,19 @@ int main(int argc, char *argv[])
     for (const auto &ship_iterator : me->getShips())
     {
       shared_ptr<Ship> ship = ship_iterator.second;
+      ship->setMap(game_map);
 
-      if (game_map->at(*ship)->getHalite() / 10 < ship->getHalite() || game_map->at(*ship)->hasStructure() || ship->isFull())
-      {
-        // command_queue.push_back(ship->move(Direction::North));
-        command_queue.push_back(ship->move(ship->computeNextDirection(Position(0, 0), game_map)));
-      }
-      else
-      {
-        command_queue.push_back(ship->stayStill());
-      }
+      command_queue.push_back(ship->getMove());
+
+      // if (game_map->at(*ship)->getHalite() / 10 < ship->getHalite() || game_map->at(*ship)->hasStructure() || ship->isFull())
+      // {
+      //   // command_queue.push_back(ship->move(Direction::North));
+      //   command_queue.push_back(ship->move(ship->computeNextDirection(Position(0, 0), game_map)));
+      // }
+      // else
+      // {
+      //   command_queue.push_back(ship->stayStill());
+      // }
     }
 
     if (
