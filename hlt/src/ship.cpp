@@ -9,7 +9,7 @@ Ship::Ship(const int ownerId, const int entityId, const Position &pos, const int
                                                                                                                                         m_halite(halite),
                                                                                                                                         m_shipState(new HarvestingState()),
                                                                                                                                         m_pathToDest(std::unique_ptr<Dstar>(new Dstar(game_width, game_height)))
-                                                                                                                                        // m_game_map(shared_ptr<GameMap>(new GameMap()))
+// m_game_map(shared_ptr<GameMap>(new GameMap()))
 {
 }
 
@@ -24,12 +24,13 @@ std::string Ship::move(const Direction direction) const
   return Command::move(m_entityId, direction);
 }
 
-Direction Ship::computeNextDirection(const Position &dest, shared_ptr<GameMap> &game_map) const
+Direction Ship::computeNextDirection(const Position &dest, std::shared_ptr<GameMap> &game_map) const
 {
   m_pathToDest->initWithPosition(m_position, dest);
 
-  //comment on l'appelle avec les paramètres ici ? 
+  //comment on l'appelle avec les paramètres ici ?
   //Bon move d'ajouter les deux pramètres aussi en signaturede computeNextDirection
+  
   std::vector<Position> unsafeCells = game_map->getUnsafeCells(true, true);
 
   custom_logger::log("[Ship::computeNextDirection] Ship id : " + std::to_string(m_entityId));
@@ -65,37 +66,51 @@ Direction Ship::computeNextDirection(const Position &dest, shared_ptr<GameMap> &
     nextStep.y = m_position.getYCoord();
   }
 
-  custom_logger::log("[Ship::computeNextDirection] Next Step : " + std::to_string(nextStep.x) + ", " + std::to_string(nextStep.y) + ", ID SHIP : " + std::to_string(m_entityId));
+  custom_logger::log("[Ship::computeNextDirection] Next Step : " + std::to_string(nextStep.x) + ", " + std::to_string(nextStep.y) + ", ID ship : " + std::to_string(m_entityId));
 
-  game_map->at(m_position)->markShip(true);
+  game_map->at(Position(nextStep.x, nextStep.y))->markShip(true);
 
-  int tempX = nextStep.x - m_position.getXCoord();
-  int tempY = nextStep.y - m_position.getYCoord();
-  if (tempX != 0)
+  int dx = nextStep.x - m_position.getXCoord();
+  if (dx != 0)
   {
-    if (tempX < 0)
-    {
-      return Direction::West;
-    }
-    else
-    {
-      return Direction::East;
-    }
+    return directionSelection(dx, game_map->getWidth(), Direction::East, Direction::West);
   }
 
-  if (tempY != 0)
+  int dy = nextStep.y - m_position.getYCoord();
+  if (dy != 0)
   {
-    if (tempY < 0)
-    {
-      return Direction::North;
-    }
-    else
-    {
-      return Direction::South;
-    }
+    return directionSelection(dy, game_map->getHeight(), Direction::South, Direction::North);
   }
+
 
   return Direction::Still;
+}
+
+// Second is the opposite of first like north -> south
+Direction Ship::directionSelection(const int diff, const int size, const Direction first, const Direction second) const
+{
+  if (abs(diff) > size / 2)
+  {
+    if (diff < 0)
+    {
+      return first;
+    }
+    else
+    {
+      return second;
+    }
+  }
+  else
+  {
+    if (diff < 0)
+    {
+      return second;
+    }
+    else
+    {
+      return first;
+    }
+  }
 }
 
 std::string Ship::stayStill() const
@@ -103,7 +118,7 @@ std::string Ship::stayStill() const
   return Command::move(m_entityId, Direction::Still);
 }
 
-std::shared_ptr<Ship> Ship::generate(const int playerId, const int game_width, const int game_height)
+shared_ptr<Ship> Ship::generate(const int playerId, const int game_width, const int game_height)
 {
   int ship_id, x, y, halite;
   input::get_sstream() >> ship_id >> x >> y >> halite;
@@ -112,13 +127,17 @@ std::shared_ptr<Ship> Ship::generate(const int playerId, const int game_width, c
 
 void Ship::update(const Ship *ship)
 {
-  m_shipState->update(this);
   m_halite = ship->m_halite;
   m_position = ship->m_position;
 }
 
-//Setters
+std::string Ship::update(shared_ptr<GameMap> &game_map)
+{
+  m_shipState->update(this, game_map);
+  return Command::move(m_entityId, computeNextDirection(m_shipState->getDestination(), game_map));
+}
 
+//Setters
 
 void Ship::setState(State *nextState)
 {
@@ -128,11 +147,6 @@ void Ship::setState(State *nextState)
 }
 
 // Getter
-std::string Ship::getMove(){
-  custom_logger::log("ntm");
-  // return Command::move(m_entityId, computeNextDirection(m_position, m_game_map));
-  return Command::move(m_entityId, Direction::North);
-}
 
 bool Ship::isFull() const
 {

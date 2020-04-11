@@ -15,6 +15,9 @@ private:
   State *m_shipState;
   std::unique_ptr<Dstar> m_pathToDest;
   Direction m_nextMove;
+  Position m_destination;
+
+  Direction directionSelection(const int diff, const int size, const Direction first, const Direction second) const;
 
 public:
   Ship(const int ownerId, const int entityId, const Position &pos, const int halite, const int game_width, const int game_height);
@@ -23,9 +26,14 @@ public:
   std::string makeDropoff() const;
 
   std::string move(const Direction direction) const;
-  Direction computeNextDirection(const Position &position, shared_ptr<GameMap> &game_map) const;
+  Direction computeNextDirection(const Position &position, std::shared_ptr<GameMap> &game_map) const;
   std::string stayStill() const;
 
+  //Update function used in main
+  //use the game map as paramteter to compute best actions the ship can perform
+  std::string update(std::shared_ptr<GameMap> &game_map);
+  
+  
   static std::shared_ptr<Ship> generate(const int playerID, const int game_width, const int game_height);
 
 
@@ -38,7 +46,7 @@ public:
   // Getter
   bool isFull() const;
   int getHalite() const;
-  std::string getMove();
+  
 };
 
 #endif
