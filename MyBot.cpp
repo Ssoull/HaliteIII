@@ -39,8 +39,10 @@ int main(int argc, char *argv[])
     for (const auto &ship_iterator : me->getShips())
     {
       shared_ptr<Ship> ship = ship_iterator.second;
-      ship->setMap(game_map);
 
+      //Nouveau point d'entrée ? 
+      //Passer la map à cette fonction, derrière combiner les states et le compute nextdirection pour choisir la destination et la prochaine direction
+      //Sorte d'interface pour virer toutes les décisions du mybot
       command_queue.push_back(ship->getMove());
 
       // if (game_map->at(*ship)->getHalite() / 10 < ship->getHalite() || game_map->at(*ship)->hasStructure() || ship->isFull())

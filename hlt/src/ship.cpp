@@ -8,8 +8,8 @@
 Ship::Ship(const int ownerId, const int entityId, const Position &pos, const int halite, const int game_width, const int game_height) : Entity(ownerId, entityId, pos),
                                                                                                                                         m_halite(halite),
                                                                                                                                         m_shipState(new HarvestingState()),
-                                                                                                                                        m_pathToDest(std::unique_ptr<Dstar>(new Dstar(game_width, game_height))),
-                                                                                                                                        m_game_map(shared_ptr<GameMap>(new GameMap()))
+                                                                                                                                        m_pathToDest(std::unique_ptr<Dstar>(new Dstar(game_width, game_height)))
+                                                                                                                                        // m_game_map(shared_ptr<GameMap>(new GameMap()))
 {
 }
 
@@ -119,9 +119,6 @@ void Ship::update(const Ship *ship)
 
 //Setters
 
-void Ship::setMap(shared_ptr<GameMap>&game_map){
-  m_game_map = game_map;
-}
 
 void Ship::setState(State *nextState)
 {
@@ -132,8 +129,9 @@ void Ship::setState(State *nextState)
 
 // Getter
 std::string Ship::getMove(){
-  return Command::move(m_entityId, computeNextDirection(m_position, m_game_map));
-  // return Command::move(m_entityId, Direction::North);
+  custom_logger::log("ntm");
+  // return Command::move(m_entityId, computeNextDirection(m_position, m_game_map));
+  return Command::move(m_entityId, Direction::North);
 }
 
 bool Ship::isFull() const
