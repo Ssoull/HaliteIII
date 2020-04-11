@@ -94,8 +94,9 @@ class Dstar
 
 public:
   Dstar(int map_size_x, int map_size_y);
-  void initWithPosition(Position startPos, Position goalPos);
+  void init(Position startPos, Position goalPos);
   void init(int sX, int sY, int gX, int gY);
+  void updateCell(const Position &pos, double val);
   void updateCell(int x, int y, double val);
   void updateStart(int x, int y);
   void updateGoal(int x, int y);

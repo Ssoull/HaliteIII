@@ -9,18 +9,18 @@ class Ship;
 
 class State
 {
-private:
 public:
-    State();
-    virtual void update();
-    virtual void update(Ship *shipToUpdate);
-    virtual void update(Ship *shipToUpdate, std::shared_ptr<GameMap> &game_map);
-    virtual void onStateEnter();
-    virtual void onStateExit();
+    virtual void update() = 0;
+    virtual void update(Ship *ship_to_update) = 0;
+    virtual void update(Ship *ship_to_update, std::shared_ptr<GameMap> &game_map) = 0;
+    virtual void onStateEnter() = 0;
+    virtual void onStateExit() = 0;
     //Return the direction the shilp should use
     virtual Direction computeNextDirection(const Position &dest, std::shared_ptr<GameMap> &game_map);
     //Should return the best position according to the current state
-    virtual Position computeBestDestination(const Position &startPos, std::shared_ptr<GameMap> &game_map);
-    virtual Position getDestination();
+    virtual Position computeBestDestination(const Position &start_pos, std::shared_ptr<GameMap> &game_map) = 0;
+
+    // Getter
+    virtual Position getDestination() = 0;
 };
 #endif

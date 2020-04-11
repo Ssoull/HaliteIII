@@ -75,14 +75,14 @@ bool Dstar::occupied(state u)
   return (cur->second.cost < 0);
 }
 
-/* void Dstar::initWithPosition(Position startPos, Position goalPos)
+/* void Dstar::init(Position startPos, Position goalPos)
  * --------------------------
  * Init dstar with start and goal position
  * Use the default init at the end :D
  */
-void Dstar::initWithPosition(Position startPos, Position goalPos)
+void Dstar::init(Position startPos, Position goalPos)
 {
-  custom_logger::log("start" + startPos.to_string() + "-goal" + goalPos.to_string());
+  custom_logger::log("[Dstar::init] StartPos : " + startPos.to_string() + "; GoalPos : " + goalPos.to_string());
   init(startPos.getXCoord(), startPos.getYCoord(), goalPos.getXCoord(), goalPos.getYCoord());
 }
 
@@ -194,12 +194,13 @@ double Dstar::eightCondist(state a, state b)
   // double temp;
   // double min = fabs(a.x - b.x);
   // double max = fabs(a.y - b.y);
-  // if (min > max) {
+  // if (min > max)
+  // {
   //   double temp = min;
   //   min = max;
   //   max = temp;
   // }
-  // return ((M_SQRT2-1.0)*min + max);
+  // return ((M_SQRT2 - 1.0) * min + max);
 
   // Working on a solution to implement toroidal distance
   int dx = std::abs(b.x - a.x);
@@ -433,6 +434,16 @@ double Dstar::cost(state a, state b)
     return scale * C1;
   return scale * cellHash[a].cost;
 }
+
+/*void Dstar::updateCell(const Position &pos, double val)
+ * --------------------------
+ * Overload updateCell(int x, int y, double val)
+ */
+void Dstar::updateCell(const Position &pos, double val)
+{
+  updateCell(pos.getXCoord(), pos.getYCoord(), val);
+}
+
 /* void Dstar::updateCell(int x, int y, double val)
  * --------------------------
  * As per [S. Koenig, 2002]
@@ -462,20 +473,20 @@ void Dstar::updateCell(int x, int y, double val)
  */
 state Dstar::moduloSucc(state u, int x, int y)
 {
-  if (u.x + x < 0)
+  if (u.x + x < 0) // Left
   {
     u.x = u.x + x + mapSizeX;
   }
-  else
+  else // Right
   {
     u.x = (u.x + x) % mapSizeX;
   }
 
-  if (u.y + y < 0)
+  if (u.y + y < 0) // Up
   {
     u.y = u.y + y + mapSizeY;
   }
-  else
+  else // Down
   {
     u.y = (u.y + y) % mapSizeX;
   }
@@ -515,7 +526,7 @@ void Dstar::getSucc(state u, list<state> &s)
 /* void Dstar::getPred(state u,list<state> &s)
  * --------------------------
  * Returns a list of all the predecessor states for state u. Since
- * this is for an 8-way connected graph the list contails all the
+ * this is for an 4-way connected graph the list contails all the
  * neighbours for state u. Occupied neighbours are not added to the
  * list.
  */

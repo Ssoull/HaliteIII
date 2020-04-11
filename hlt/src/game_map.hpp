@@ -4,6 +4,7 @@
 #include "map_cell.hpp"
 #include "entity.hpp"
 #include "chunk.hpp"
+#include "dstar.hpp"
 
 #include <vector>
 
@@ -23,6 +24,8 @@ public:
 
   void update();
   static std::shared_ptr<GameMap> generate();
+
+  void populateDstar(Dstar *dstar, const Position &current_pos, bool include_shipyard, bool include_dropoffs) const;
 
   // Getters
   int getWidth() const;

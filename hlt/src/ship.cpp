@@ -24,27 +24,15 @@ std::string Ship::move(const Direction direction) const
   return Command::move(m_entityId, direction);
 }
 
-Direction Ship::computeNextDirection(const Position &dest, std::shared_ptr<GameMap> &game_map) const
+Direction Ship::computeNextDirection(const Position &dest, std::shared_ptr<GameMap> &game_map, const int include_shipyard, const int include_dropoffs) const
 {
-  m_pathToDest->initWithPosition(m_position, dest);
-
-  //comment on l'appelle avec les paramètres ici ?
-  //Bon move d'ajouter les deux pramètres aussi en signaturede computeNextDirection
-  
-  std::vector<Position> unsafeCells = game_map->getUnsafeCells(true, true);
+  m_pathToDest->init(m_position, dest);
 
   custom_logger::log("[Ship::computeNextDirection] Ship id : " + std::to_string(m_entityId));
   custom_logger::log("[Ship::computeNextDirection] Current cell : " + m_position.to_string());
   custom_logger::log("[Ship::computeNextDirection] Destination cell : " + dest.to_string());
 
-  for (int i = 0; i < unsafeCells.size(); ++i)
-  {
-    if (m_position != unsafeCells[i])
-    {
-      m_pathToDest->updateCell(unsafeCells[i].getXCoord(), unsafeCells[i].getYCoord(), -1);
-      custom_logger::log("[Ship::computeNextDirection] Unsafe Cells : " + unsafeCells[i].to_string());
-    }
-  }
+  game_map->populateDstar(m_pathToDest.get(), m_position, include_shipyard, include_dropoffs);
 
   if (!m_pathToDest->replan())
   {
@@ -82,11 +70,9 @@ Direction Ship::computeNextDirection(const Position &dest, std::shared_ptr<GameM
     return directionSelection(dy, game_map->getHeight(), Direction::South, Direction::North);
   }
 
-
   return Direction::Still;
 }
 
-// Second is the opposite of first like north -> south
 Direction Ship::directionSelection(const int diff, const int size, const Direction first, const Direction second) const
 {
   if (abs(diff) > size / 2)
@@ -134,7 +120,8 @@ void Ship::update(const Ship *ship)
 std::string Ship::update(shared_ptr<GameMap> &game_map)
 {
   m_shipState->update(this, game_map);
-  return Command::move(m_entityId, computeNextDirection(m_shipState->getDestination(), game_map));
+  //TODO: Trouver un moyen de faire en sorte de savoir si on doit inclure ou non les shipyard/dropoffs
+  return Command::move(m_entityId, computeNextDirection(m_shipState->getDestination(), game_map, false, false));
 }
 
 //Setters

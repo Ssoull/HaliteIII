@@ -26,19 +26,17 @@ public:
   std::string makeDropoff() const;
 
   std::string move(const Direction direction) const;
-  Direction computeNextDirection(const Position &position, std::shared_ptr<GameMap> &game_map) const;
+  Direction computeNextDirection(const Position &position, std::shared_ptr<GameMap> &game_map, const int include_shipyard, const int include_dropoffs) const;
   std::string stayStill() const;
 
   //Update function used in main
   //use the game map as paramteter to compute best actions the ship can perform
   std::string update(std::shared_ptr<GameMap> &game_map);
-  
-  
+
   static std::shared_ptr<Ship> generate(const int playerID, const int game_width, const int game_height);
 
-
   //Ca sert à quoi de mettre le ship en paramètre ?
-  //Y'a pas moyen de faire sans dans le player ? 
+  //Y'a pas moyen de faire sans dans le player ?
   void update(const Ship *ship);
   // void update();
   void setState(State *nextState);
@@ -46,7 +44,6 @@ public:
   // Getter
   bool isFull() const;
   int getHalite() const;
-  
 };
 
 #endif
