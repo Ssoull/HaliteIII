@@ -2,7 +2,7 @@
 #include "game_map.hpp"
 #include "../utils/input.hpp"
 
-GameMap::GameMap()
+GameMap::GameMap(const int width, const int height) : m_width(width), m_height(height), m_cells(width, std::vector<MapCell>(height))
 {
 }
 
@@ -23,11 +23,11 @@ MapCell *GameMap::at(const Entity *entity)
 
 void GameMap::update()
 {
-  for (int y = 0; y < m_height; ++y)
+  for (int x = 0; x < m_width; ++x)
   {
-    for (int x = 0; x < m_width; ++x)
+    for (int y = 0; y < m_height; ++y)
     {
-      m_cells[y][x].markShip(false);
+      m_cells[x][y].markShip(false);
     }
   }
   int update_count;
@@ -37,28 +37,30 @@ void GameMap::update()
   {
     int x, y, halite;
     input::get_sstream() >> x >> y >> halite;
-    m_cells[y][x].setHalite(halite);
+    m_cells[x][y].setHalite(halite);
   }
 }
 
 std::shared_ptr<GameMap> GameMap::generate()
 {
-  std::shared_ptr<GameMap> map = std::make_shared<GameMap>();
+  int width, height;
+  input::get_sstream() >> width >> height;
 
-  input::get_sstream() >> map->m_width >> map->m_height;
+  std::shared_ptr<GameMap> map = std::make_shared<GameMap>(width, height);
 
-  map->m_cells.resize((size_t)map->m_width);
-  for (int x = 0; x < map->m_width; ++x)
+  // The board is stored row by row
+  for (int y = 0; y < map->m_height; ++y)
   {
     auto in = input::get_sstream();
-
-    map->m_cells[x].reserve((size_t)map->m_height);
-    for (int y = 0; y < map->m_height; ++y)
+    for (int x = 0; x < map->m_width; ++x)
     {
       int halite;
       in >> halite;
 
-      map->m_cells[x].push_back(MapCell(Position(x, y), halite));
+      map->m_cells[x][y] = MapCell(Position(x, y), halite);
+      // For debug the generation
+      // Commented by default otherwise there is to much data displayed in logs
+      // custom_logger::log(Position(x, y).to_string() + ", halite : " + std::to_string(halite));
     }
   }
   return map;
@@ -66,13 +68,20 @@ std::shared_ptr<GameMap> GameMap::generate()
 
 void GameMap::populateDstar(Dstar *dstar, const Position &current_pos, bool include_shipyard, bool include_dropoffs) const
 {
+
   for (int x = 0; x < m_cells.size(); ++x)
   {
     for (int y = 0; y < m_cells[x].size(); ++y)
     {
       MapCell currentMapCell = m_cells[x][y];
+      if (current_pos == currentMapCell.getPosition())
+      {
+        continue;
+      }
+
       if (currentMapCell.isOccupied())
       {
+
         //Check if the cell has a shipyard on it
         //If yes and if we want to include the shipyard in unsafe cells it's added to the list
         bool hasShipyard = currentMapCell.hasShipyard() && include_shipyard ? true : false;

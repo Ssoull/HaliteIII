@@ -37,7 +37,7 @@ Position HarvestingState::computeBestDestination(const Position &start_pos, std:
         {
             if (game_map->at(Position(x, y))->getHalite() > maxHalite)
             {
-                bestPositionTemp = Position(y, x);
+                bestPositionTemp = Position(x, y);
                 maxHalite = game_map->at(Position(x, y))->getHalite();
             }
         }

@@ -8,7 +8,7 @@
 Ship::Ship(const int ownerId, const int entityId, const Position &pos, const int halite, const int game_width, const int game_height) : Entity(ownerId, entityId, pos),
                                                                                                                                         m_halite(halite),
                                                                                                                                         m_shipState(new HarvestingState()),
-                                                                                                                                        m_pathToDest(std::unique_ptr<Dstar>(new Dstar(game_width, game_height)))
+                                                                                                                                        m_pathToDest(std::make_unique<Dstar>(game_width, game_height))
 // m_game_map(shared_ptr<GameMap>(new GameMap()))
 {
 }
@@ -24,7 +24,7 @@ std::string Ship::move(const Direction direction) const
   return Command::move(m_entityId, direction);
 }
 
-Direction Ship::computeNextDirection(const Position &dest, std::shared_ptr<GameMap> &game_map, const int include_shipyard, const int include_dropoffs) const
+Direction Ship::computeNextDirection(const Position &dest, std::shared_ptr<GameMap> &game_map, const bool include_shipyard, const bool include_dropoffs) const
 {
   m_pathToDest->init(m_position, dest);
 
@@ -121,7 +121,7 @@ std::string Ship::update(shared_ptr<GameMap> &game_map)
 {
   m_shipState->update(this, game_map);
   //TODO: Trouver un moyen de faire en sorte de savoir si on doit inclure ou non les shipyard/dropoffs
-  return Command::move(m_entityId, computeNextDirection(m_shipState->getDestination(), game_map, false, false));
+  return Command::move(m_entityId, computeNextDirection(m_shipState->getDestination(), game_map, true, true));
 }
 
 //Setters

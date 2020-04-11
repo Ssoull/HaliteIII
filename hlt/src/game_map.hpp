@@ -17,7 +17,7 @@ private:
   std::vector<Position> m_unsafeCells;
 
 public:
-  GameMap();
+  GameMap(const int width, const int height);
   MapCell *at(const Position &position);
   MapCell *at(const Entity &entity);
   MapCell *at(const Entity *entity);

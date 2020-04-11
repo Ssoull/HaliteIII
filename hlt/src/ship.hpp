@@ -26,7 +26,7 @@ public:
   std::string makeDropoff() const;
 
   std::string move(const Direction direction) const;
-  Direction computeNextDirection(const Position &position, std::shared_ptr<GameMap> &game_map, const int include_shipyard, const int include_dropoffs) const;
+  Direction computeNextDirection(const Position &position, std::shared_ptr<GameMap> &game_map, const bool include_shipyard, const bool include_dropoffs) const;
   std::string stayStill() const;
 
   //Update function used in main

@@ -14,6 +14,7 @@ private:
   bool m_hasDropoff;
 
 public:
+  MapCell();
   MapCell(const Position &pos, const int halite);
 
   // Getter

@@ -1,5 +1,7 @@
 #include "map_cell.hpp"
 
+MapCell::MapCell() {}
+
 MapCell::MapCell(const Position &pos, const int halite) : m_position(pos),
                                                           m_halite(halite),
                                                           m_hasShip(false),
