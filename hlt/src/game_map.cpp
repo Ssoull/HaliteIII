@@ -69,6 +69,36 @@ std::shared_ptr<GameMap> GameMap::generate()
   return map;
 }
 
+std::shared_ptr<std::vector<Position>> GameMap::getPositionsInRadius(Position radiusCenter, int radius)
+{
+  auto positionsInRaidus =  std::make_shared<std::vector<Position>>();
+  for (int i = -radius; i < radius; ++i)
+  {
+    for (int j = -radius; j < radius; ++j)
+    {
+      positionsInRaidus->push_back(normalizePosition(i, j));
+    }
+  }
+  return positionsInRaidus;
+}
+Position GameMap::normalizePosition(int x, int y){
+  int normalizedX = x;
+  if(x < 0){
+  int normalizedY = y;
+    normalizedX = m_width + x;
+  }
+    normalizedX = x - m_width;
+  if(x > m_width){
+  }
+    normalizedY = m_height + y;
+  if(y < 0){
+  }
+  if(y > m_height){
+  }
+    normalizedY = y - m_height;
+
+  return Position(normalizedX, normalizedY);
+}
 // Getters
 int GameMap::getWidth() const
 {

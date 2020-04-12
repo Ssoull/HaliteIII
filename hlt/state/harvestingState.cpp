@@ -4,14 +4,14 @@
 
 void HarvestingState::update(Ship *entity_to_update, std::shared_ptr<GameMap> &game_map)
 {
-    if(game_map->at(m_bestPosition)->isOccupied()==true && entity_to_update->getPosition() != m_bestPosition){
+    if (game_map->at(m_bestPosition)->isOccupied() == true && entity_to_update->getPosition() != m_bestPosition)
+    {
         custom_logger::log("Cell occupied, replaning");
-        m_bestPosition = computeBestDestination(Position(0,0), game_map);
+        m_bestPosition = computeBestDestination(Position(0, 0), game_map);
     }
 }
 
-
-void HarvestingState::onStateEnter(std::shared_ptr<GameMap> &game_map)
+void HarvestingState::onStateEnter(std::shared_ptr<GameMap> &game_map, Ship *entity)
 {
     //Actions to perform on state enter (e g : set target...)
     m_bestPosition = computeBestDestination(Position(0, 0), game_map);
@@ -30,7 +30,7 @@ Position HarvestingState::computeBestDestination(const Position &start_pos, std:
     {
         for (int y = 0; y < game_map->getHeight(); ++y)
         {
-            if (game_map->at(Position(x, y))->getHalite() > maxHalite && game_map->at(Position(x,y))->isOccupied()==false)
+            if (game_map->at(Position(x, y))->getHalite() > maxHalite && game_map->at(Position(x, y))->isOccupied() == false)
             {
                 bestPositionTemp = Position(x, y);
                 maxHalite = game_map->at(Position(x, y))->getHalite();

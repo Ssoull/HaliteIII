@@ -6,11 +6,11 @@
 #include "../state/harvestingState.hpp"
 #include "../state/defaultState.hpp"
 
-Ship::Ship(const int ownerId, const int entityId, const Position &pos,
-           const int halite, const int game_width, const int game_height) : Entity(ownerId, entityId, pos),
-                                                                            m_halite(halite),
-                                                                            m_shipState(new DefaultState()),
-                                                                            m_pathToDest(std::unique_ptr<Dstar>(new Dstar(game_width, game_height)))
+Ship::Ship(const int ownerId, const int entityId, const Position &pos, const int halite, const int game_width, const int game_height) : Entity(ownerId, entityId, pos),
+                                                                                                                                        m_halite(halite),
+                                                                                                                                        m_shipState(std::make_shared<DefaultState>()),
+                                                                                                                                        m_pathToDest(std::make_unique<Dstar>(game_width, game_height))
+// m_game_map(shared_ptr<GameMap>(new GameMap()))
 {
 }
 
@@ -177,7 +177,14 @@ std::string Ship::update(shared_ptr<GameMap> &game_map)
 {
   m_shipState->update(this, game_map);
   //TODO: Trouver un moyen de faire en sorte de savoir si on doit inclure ou non les shipyard/dropoffs
-  return Command::move(m_entityId, computeNextDirection(m_shipState->getDestination(), game_map, true, true));
+  if (!m_shipState->shouldCreateDropoff)
+  {
+    return Command::move(m_entityId, computeNextDirection(m_shipState->getDestination(), game_map, true, true));
+  }
+  else
+  {
+    return Command::transformShipIntoDropoff(m_entityId);
+  }
 }
 
 //Setters
