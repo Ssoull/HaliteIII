@@ -26,14 +26,14 @@ std::string Ship::move(const Direction direction) const
 }
 
 Direction Ship::computeNextDirection(const Position &dest, std::shared_ptr<GameMap> &game_map,
-                                     const bool include_shipyard, const bool include_dropoffs) const
+                                     const bool include_shipyard, const bool include_dropoffs)
 {
   custom_logger::log("[Ship::computeNextDirection] Ship id : " + std::to_string(m_entityId));
   custom_logger::log("[Ship::computeNextDirection] Current cell : " + m_position.to_string());
   custom_logger::log("[Ship::computeNextDirection] Destination cell : " + dest.to_string());
 
   // Check if the ship have enough halite to move
-  double costToMove = (double)game_map->at(m_position)->getHalite() / (double)constants::MOVE_COST_RATIO;
+  double costToMove = game_map->getCost(m_position);
   if (m_halite < costToMove) // Must not be equal because if current halite=0 and cost=0, the ship can move
   {
     custom_logger::log("[Ship::computeNextDirection] Not enough halite : " + std::to_string(m_halite) + ", Cost to move : " + std::to_string(costToMove));
@@ -112,30 +112,26 @@ Direction Ship::directionSelection(const int diff, const int size, const Directi
   }
 }
 
-void Ship::populateDstar(std::shared_ptr<GameMap> &game_map, bool include_shipyard, bool include_dropoffs) const
+void Ship::populateDstar(std::shared_ptr<GameMap> &game_map, const bool include_shipyard, const bool include_dropoffs)
 {
 
   for (int x = 0; x < game_map->getWidth(); ++x)
   {
     for (int y = 0; y < game_map->getHeight(); ++y)
     {
-      MapCell currentMapCell = *game_map->at(Position(x, y));
+      Position currentPosition = Position(x, y);
+      MapCell currentMapCell = *game_map->at(currentPosition);
 
       if (!currentMapCell.hasStructure())
       {
         // To debug the cost on each cell
         // Commented by default otherwise there is to much data displayed in logs
-        // custom_logger::log("[Ship::populateDstar] Move cost at : " + m_position.to_string() + " - cost : " +
-        //                     std::to_string(((double)currentMapCell.getHalite() / (double)constants::MOVE_COST_RATIO) / 1000));
-        m_pathToDest->updateCell(currentMapCell.getPosition(), ((double)currentMapCell.getHalite() / (double)constants::MOVE_COST_RATIO) / 100);
+        // custom_logger::log("[Ship::populateDstar] Move cost at : " + currentPosition.to_string() + " - cost : " +
+        //                    std::to_string(game_map->getCost(currentPosition) / 100));
+        m_pathToDest->updateCell(currentPosition, game_map->getCost(currentPosition) / 100);
       }
 
-      if (m_position == currentMapCell.getPosition())
-      {
-        continue;
-      }
-
-      if (currentMapCell.isOccupied())
+      if (m_position != currentPosition && currentMapCell.isOccupied())
       {
         // Check if the cell has a shipyard on it
         // If yes and if we want to include the shipyard in unsafe cells it's added to the list
@@ -149,8 +145,8 @@ void Ship::populateDstar(std::shared_ptr<GameMap> &game_map, bool include_shipya
 
         if (hasShipyard || hasDropoff || hasShip)
         {
-          m_pathToDest->updateCell(currentMapCell.getPosition(), -1);
-          custom_logger::log("[GameMap::populateDstar] Unsafe Cells : " + currentMapCell.getPosition().to_string());
+          m_pathToDest->updateCell(currentPosition, -1);
+          custom_logger::log("[GameMap::populateDstar] Unsafe Cells : " + currentPosition.to_string());
         }
       }
     }

@@ -20,7 +20,7 @@ private:
   Position m_destination;
 
   Direction directionSelection(const int diff, const int size, const Direction first, const Direction second) const;
-  void populateDstar(std::shared_ptr<GameMap> &game_map, bool include_shipyard, bool include_dropoffs) const;
+  void populateDstar(std::shared_ptr<GameMap> &game_map, const bool include_shipyard, const bool include_dropoffs /*, const double costToMove*/);
 
 public:
   Ship(const int ownerId, const int entityId, const Position &pos, const int halite, const int game_width, const int game_height);
@@ -29,7 +29,7 @@ public:
   std::string makeDropoff() const;
 
   std::string move(const Direction direction) const;
-  Direction computeNextDirection(const Position &position, std::shared_ptr<GameMap> &game_map, const bool include_shipyard, const bool include_dropoffs) const;
+  Direction computeNextDirection(const Position &position, std::shared_ptr<GameMap> &game_map, const bool include_shipyard, const bool include_dropoffs);
   std::string stayStill() const;
 
   static std::shared_ptr<Ship> generate(const int playerID, const int game_width, const int game_height);

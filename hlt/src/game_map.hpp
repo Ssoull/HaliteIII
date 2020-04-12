@@ -28,6 +28,7 @@ public:
   // Getters
   int getWidth() const;
   int getHeight() const;
+  double getCost(const Position &pos) const;
 };
 
 #endif

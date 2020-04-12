@@ -1,6 +1,9 @@
-#include <algorithm>
 #include "game_map.hpp"
+
 #include "../utils/input.hpp"
+#include "../utils/constants.hpp"
+
+#include <algorithm>
 
 GameMap::GameMap(const int width, const int height) : m_width(width), m_height(height), m_cells(width, std::vector<MapCell>(height))
 {
@@ -75,4 +78,9 @@ int GameMap::getWidth() const
 int GameMap::getHeight() const
 {
   return m_height;
+}
+
+double GameMap::getCost(const Position &pos) const
+{
+  return (double)m_cells[pos.getXCoord()][pos.getYCoord()].getHalite() / (double)constants::MOVE_COST_RATIO;
 }
