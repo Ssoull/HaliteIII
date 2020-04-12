@@ -1,15 +1,14 @@
-#ifndef IDLESTATE_H
-#define IDLESTATE_H
+// #ifndef IDLESTATE_H
+// #define IDLESTATE_H
 
-#include "state.hpp"
+// #include "state.hpp"
 
-class IdleState : public State
-{
-private:
-public:
-  virtual void update(Ship *shipToUpdate) override;
-  virtual void onStateEnter() override;
-  virtual void onStateExit() override;
-};
+// class IdleState : public State
+// {
+// private:
+// public:
+//   virtual void onStateEnter(std::shared_ptr<GameMap> &game_map) override;
+//   virtual void onStateExit() override;
+// };
 
-#endif
+// #endif

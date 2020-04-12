@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
   {
     rng_seed = static_cast<unsigned int>(time(nullptr));
   }
-  mt19937 rng(rng_seed);
+  mt19937 rng(12345678);
 
   Game game;
   // At this point "game" variable is populated with initial map data.

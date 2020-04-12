@@ -4,11 +4,12 @@
 #include "../utils/input.hpp"
 
 #include "../state/harvestingState.hpp"
+#include "../state/defaultState.hpp"
 
 Ship::Ship(const int ownerId, const int entityId, const Position &pos, const int halite, const int game_width, const int game_height) : Entity(ownerId, entityId, pos),
                                                                                                                                         m_halite(halite),
-                                                                                                                                        m_shipState(new HarvestingState()),
-                                                                                                                                        m_pathToDest(std::make_unique<Dstar>(game_width, game_height))
+                                                                                                                                        m_shipState(new DefaultState()),
+                                                                                                                                        m_pathToDest(std::unique_ptr<Dstar>(new Dstar(game_width, game_height)))
 // m_game_map(shared_ptr<GameMap>(new GameMap()))
 {
 }
@@ -124,14 +125,19 @@ std::string Ship::update(shared_ptr<GameMap> &game_map)
   return Command::move(m_entityId, computeNextDirection(m_shipState->getDestination(), game_map, true, true));
 }
 
-//Setters
-
-void Ship::setState(State *nextState)
-{
+void Ship::setState(std::shared_ptr<State> nextState, std::shared_ptr<GameMap> &game_map){
   m_shipState->onStateExit();
   m_shipState = nextState;
-  m_shipState->onStateEnter();
+  m_shipState->onStateEnter(game_map);
 }
+//Setters
+
+// void Ship::setState(std::shared_ptr<State> nextState)
+// {
+//   m_shipState->onStateExit();
+//   m_shipState = nextState;
+//   m_shipState->onStateEnter();
+// }
 
 // Getter
 

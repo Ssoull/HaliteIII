@@ -1,13 +1,13 @@
-#include "idleState.hpp"
+// #include "idleState.hpp"
 
-void IdleState::update(Ship *shipToUpdate)
-{
-}
+// void IdleState::update(Ship *shipToUpdate)
+// {
+// }
 
-void IdleState::onStateEnter()
-{
-}
+// void IdleState::onStateEnter()
+// {
+// }
 
-void IdleState::onStateExit()
-{
-}
+// void IdleState::onStateExit()
+// {
+// // 

@@ -10,10 +10,8 @@ private:
     Position m_bestPosition;
 
 public:
-    virtual void update() override;
-    virtual void update(Ship *entity_to_update) override;
     virtual void update(Ship *ship_to_update, std::shared_ptr<GameMap> &game_map) override;
-    virtual void onStateEnter() override;
+    virtual void onStateEnter(std::shared_ptr<GameMap> &game_map) override;
     virtual void onStateExit() override;
     virtual Position computeBestDestination(const Position &start_pos, std::shared_ptr<GameMap> &game_map) override;
 

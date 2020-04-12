@@ -14,3 +14,5 @@ obj/**
 tools/
 make.bat
 .vscode/
+
+.vs/
