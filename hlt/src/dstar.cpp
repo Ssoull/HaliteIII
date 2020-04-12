@@ -69,7 +69,7 @@ bool Dstar::occupied(state u)
 {
 
   ds_ch::iterator cur = cellHash.find(u);
-
+  // custom_logger::log("Occupied " + std::to_string(cur == cellHash.end()) + "coord " + std::to_string(u.x) + "," + std::to_string(u.y));
   if (cur == cellHash.end())
     return false;
   return (cur->second.cost < 0);
@@ -357,7 +357,7 @@ void Dstar::insert(state u)
   // uncommented except it introduces a bug, I suspect that there is a
   // bug somewhere else and having duplicates in the openList queue
   // hides the problem...
-  //if ((cur != openHash.end()) && (close(csum,cur->second))) return;
+  // if ((cur != openHash.end()) && (close(csum, cur->second))) return;
 
   openHash[u] = csum;
   openList.push(u);
@@ -450,7 +450,6 @@ void Dstar::updateCell(const Position &pos, double val)
  */
 void Dstar::updateCell(int x, int y, double val)
 {
-
   state u;
 
   u.x = x;
@@ -636,7 +635,7 @@ void Dstar::updateGoal(int x, int y)
  * computed by doing a greedy search over the cost+g values in each
  * cells. In order to get around the problem of the robot taking a
  * path that is near a 45 degree angle to goal we break ties based on
- *  the metric euclidean(state, goal) + euclidean(state,start).
+ * the metric euclidean(state, goal) + euclidean(state,start).
  */
 bool Dstar::replan()
 {
@@ -679,8 +678,12 @@ bool Dstar::replan()
 
     for (i = n.begin(); i != n.end(); i++)
     {
+      // if (occupied(*i))
+      // {
+      //   custom_logger::log("Is occupied continue");
+      //   continue;
+      // }
 
-      //if (occupied(*i)) continue;
       double val = cost(cur, *i);
       double val2 = trueDist(*i, s_goal) + trueDist(s_start, *i); // (Euclidean) cost to goal + cost to pred
       val += getG(*i);

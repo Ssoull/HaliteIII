@@ -20,6 +20,7 @@ private:
   Position m_destination;
 
   Direction directionSelection(const int diff, const int size, const Direction first, const Direction second) const;
+  void populateDstar(std::shared_ptr<GameMap> &game_map, bool include_shipyard, bool include_dropoffs) const;
 
 public:
   Ship(const int ownerId, const int entityId, const Position &pos, const int halite, const int game_width, const int game_height);
@@ -31,19 +32,16 @@ public:
   Direction computeNextDirection(const Position &position, std::shared_ptr<GameMap> &game_map, const bool include_shipyard, const bool include_dropoffs) const;
   std::string stayStill() const;
 
-
   static std::shared_ptr<Ship> generate(const int playerID, const int game_width, const int game_height);
 
   void init();
 
-  //Ca sert à quoi de mettre le ship en paramètre ?
-  //Y'a pas moyen de faire sans dans le player ?
   void update(const Ship *ship);
 
-  //Update function used in main
-  //use the game map as paramteter to compute best actions the ship can perform
+  // Update function used in main
+  // use the game map as paramteter to compute best actions the ship can perform
   std::string update(std::shared_ptr<GameMap> &game_map);
-  
+
   void setState(std::shared_ptr<State> nextState, std::shared_ptr<GameMap> &game_map);
 
   // Getter

@@ -25,12 +25,9 @@ public:
   void update();
   static std::shared_ptr<GameMap> generate();
 
-  void populateDstar(Dstar *dstar, const Position &current_pos, bool include_shipyard, bool include_dropoffs) const;
-
   // Getters
   int getWidth() const;
   int getHeight() const;
-  std::vector<Position> getUnsafeCells(bool includeShipyard, bool includeDropoffs);
 };
 
 #endif

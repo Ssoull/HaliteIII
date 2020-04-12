@@ -58,48 +58,12 @@ std::shared_ptr<GameMap> GameMap::generate()
       in >> halite;
 
       map->m_cells[x][y] = MapCell(Position(x, y), halite);
-      // For debug the generation
+      // To debug the generation
       // Commented by default otherwise there is to much data displayed in logs
       // custom_logger::log(Position(x, y).to_string() + ", halite : " + std::to_string(halite));
     }
   }
   return map;
-}
-
-void GameMap::populateDstar(Dstar *dstar, const Position &current_pos, bool include_shipyard, bool include_dropoffs) const
-{
-
-  for (int x = 0; x < m_cells.size(); ++x)
-  {
-    for (int y = 0; y < m_cells[x].size(); ++y)
-    {
-      MapCell currentMapCell = m_cells[x][y];
-      if (current_pos == currentMapCell.getPosition())
-      {
-        continue;
-      }
-
-      if (currentMapCell.isOccupied())
-      {
-
-        //Check if the cell has a shipyard on it
-        //If yes and if we want to include the shipyard in unsafe cells it's added to the list
-        bool hasShipyard = currentMapCell.hasShipyard() && include_shipyard ? true : false;
-
-        //Check for dropoffs if the dropoffs are included in the cells to mark as unsafe
-        bool hasDropoff = currentMapCell.hasDropoff() && include_dropoffs ? true : false;
-
-        //Check for other ships
-        bool hasShip = currentMapCell.hasShip() ? true : false;
-
-        if (hasShipyard || hasDropoff || hasShip)
-        {
-          dstar->updateCell(currentMapCell.getPosition(), -1);
-          custom_logger::log("[GameMap::populateDstar] Unsafe Cells : " + currentMapCell.getPosition().to_string());
-        }
-      }
-    }
-  }
 }
 
 // Getters
@@ -111,39 +75,4 @@ int GameMap::getWidth() const
 int GameMap::getHeight() const
 {
   return m_height;
-}
-
-std::vector<Position> GameMap::getUnsafeCells(bool includeShipyard, bool includeDropoffs)
-{
-  m_unsafeCells.clear();
-
-  for (int x = 0; x < m_cells.size(); ++x)
-  {
-    for (int y = 0; y < m_cells[x].size(); ++y)
-    {
-      if (m_cells[x][y].hasStructure())
-      {
-        //Check if the cell has a shipyard on it
-        //If yes and if we want to include the shipyard in unsafe cells it's added to the list
-        if (m_cells[x][y].hasShipyard() && includeShipyard)
-        {
-          m_unsafeCells.push_back(m_cells[x][y].getPosition());
-        }
-
-        //Check for dropoffs if the dropoffs are included in the cells to mark as unsafe
-        if (m_cells[x][y].hasDropoff() && includeDropoffs)
-        {
-          m_unsafeCells.push_back(m_cells[x][y].getPosition());
-        }
-      }
-
-      //Check for other ships
-      if (m_cells[x][y].hasShip())
-      {
-        m_unsafeCells.push_back(m_cells[x][y].getPosition());
-      }
-    }
-  }
-
-  return m_unsafeCells;
 }
