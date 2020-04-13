@@ -3,6 +3,8 @@
 
 #include "state.hpp"
 
+const int DISTANCE_WEIGHT = 2;
+
 class HarvestingState : public State
 {
 private:

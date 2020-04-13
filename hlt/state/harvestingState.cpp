@@ -1,4 +1,5 @@
 #include "harvestingState.hpp"
+#include "dropState.hpp"
 
 #include "../utils/log.hpp"
 
@@ -9,6 +10,13 @@ void HarvestingState::update(Ship *entity_to_update, std::shared_ptr<GameMap> &g
         custom_logger::log("Cell occupied, replaning");
         m_bestPosition = computeBestDestination(Position(0, 0), game_map);
     }
+    if(entity_to_update->isFull() || entity_to_update->getHalite() > 900){
+        entity_to_update->setState(std::make_shared<DropState>(), game_map);
+    }
+    if(game_map->at(entity_to_update->getPosition())->getHalite()==0){
+        m_bestPosition = computeBestDestination(entity_to_update->getPosition(), game_map);
+    }
+    //TODO add looking for neighbors for halite when cell halite is low
 }
 
 void HarvestingState::onStateEnter(std::shared_ptr<GameMap> &game_map, Ship *entity)

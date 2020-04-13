@@ -69,35 +69,51 @@ std::shared_ptr<GameMap> GameMap::generate()
   return map;
 }
 
-std::shared_ptr<std::vector<Position>> GameMap::getPositionsInRadius(Position radiusCenter, int radius)
+std::vector<Position> GameMap::getPositionsInRadius(Position radiusCenter, int radius)
 {
-  auto positionsInRaidus =  std::make_shared<std::vector<Position>>();
-  for (int i = -radius; i < radius; ++i)
+  custom_logger::log("Looking for positions in radius with center "+ radiusCenter.to_string());
+  auto positionsInRaidus =  std::vector<Position>();
+  for (int i = radiusCenter.getXCoord()-radius; i < radiusCenter.getXCoord()+radius; ++i)
   {
-    for (int j = -radius; j < radius; ++j)
+    for (int j =radiusCenter.getYCoord() -radius; j < radiusCenter.getYCoord()+radius; ++j)
     {
-      positionsInRaidus->push_back(normalizePosition(i, j));
+      custom_logger::log("adding " + normalizePosition(i,j).to_string());
+      //Todo add manathan distance
+      positionsInRaidus.push_back(normalizePosition(i, j));
     }
   }
   return positionsInRaidus;
 }
 Position GameMap::normalizePosition(int x, int y){
   int normalizedX = x;
-  if(x < 0){
   int normalizedY = y;
-    normalizedX = m_width + x;
+  if(x < 0){
+    normalizedX = m_width -1 + x;
   }
+  if(x >= m_width){
     normalizedX = x - m_width;
-  if(x > m_width){
   }
-    normalizedY = m_height + y;
   if(y < 0){
+    normalizedY = m_height - 1 + y;
   }
-  if(y > m_height){
-  }
+  if(y >= m_height){
     normalizedY = y - m_height;
-
+  }
   return Position(normalizedX, normalizedY);
+}
+
+int GameMap::computeManathanDistance(Position p1, Position p2) {
+  int dx = abs(p1.getXCoord() - p2.getXCoord());
+  int dy = abs(p1.getYCoord() - p2.getYCoord());
+
+  if(dx > m_width / 2){
+    dx = m_width - dx;
+  }
+
+  if(dy > m_height/2){
+    dy = m_height - dy;
+  }
+  return dx + dy;
 }
 // Getters
 int GameMap::getWidth() const

@@ -183,7 +183,9 @@ std::string Ship::update(shared_ptr<GameMap> &game_map)
   }
   else
   {
-    return Command::transformShipIntoDropoff(m_entityId);
+    custom_logger::log("Transforming ship");
+    // return Command::transformShipIntoDropoff(m_entityId);
+    return Command::move(m_entityId, Direction::Still);
   }
 }
 
@@ -192,7 +194,7 @@ void Ship::setState(std::shared_ptr<State> nextState, std::shared_ptr<GameMap> &
 {
   m_shipState->onStateExit();
   m_shipState = nextState;
-  m_shipState->onStateEnter(game_map);
+  m_shipState->onStateEnter(game_map, this);
 }
 
 // void Ship::setState(std::shared_ptr<State> nextState)

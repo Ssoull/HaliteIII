@@ -11,7 +11,7 @@ void DefaultState::update(Ship *entity_to_update, std::shared_ptr<GameMap> &game
 }
 
 
-void DefaultState::onStateEnter(std::shared_ptr<GameMap> &game_map) {
+void DefaultState::onStateEnter(std::shared_ptr<GameMap> &game_map, Ship *entity) {
     return;
 }
 void DefaultState::onStateExit()  {

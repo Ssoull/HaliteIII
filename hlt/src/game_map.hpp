@@ -25,8 +25,10 @@ public:
   void update();
   static std::shared_ptr<GameMap> generate();
 
+  int computeManathanDistance(Position p1, Position p2);
+
   //Return all the positions in the given radius around the radius center parameter
-  std::shared_ptr<std::vector<Position>> getPositionsInRadius(Position radiusCenter, int radius);
+  std::vector<Position> getPositionsInRadius(Position radiusCenter, int radius);
   //Normalize positions to use wrap around map coordinates
   Position normalizePosition(int x, int y);
   // Getters
