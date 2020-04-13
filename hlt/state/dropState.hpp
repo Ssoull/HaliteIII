@@ -3,7 +3,7 @@
 
 #include "state.hpp"
 
-const int DROPOFF_CHECK_RADIUS = 30;
+const int DROPOFF_CHECK_RADIUS = 8;
 
 class DropState : public State
 {
@@ -11,6 +11,7 @@ private:
   Position m_bestDropLocation;
   bool willBeDropoff = false;
   Position m_dropoffLocation;
+  int m_nbOfTurnsStuck = 0;
 
 public:
   virtual void update(Ship *entity_to_update, std::shared_ptr<GameMap> &game_map) override;

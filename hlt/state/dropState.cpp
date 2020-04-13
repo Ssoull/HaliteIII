@@ -8,6 +8,13 @@ void DropState::update(Ship *entity_to_update, std::shared_ptr<GameMap> &game_ma
 	if (willBeDropoff && entity_to_update->getPosition() == m_bestDropLocation)
 	{
 		shouldCreateDropoff = true;
+		if(checkForDropoff(game_map, DROPOFF_CHECK_RADIUS + m_nbOfTurnsStuck ,entity_to_update->getPosition())){
+			m_bestDropLocation = m_dropoffLocation;
+			shouldCreateDropoff = false;
+		}
+		else{
+			m_nbOfTurnsStuck++;
+		}
 	}
 
 	if (entity_to_update->getHalite() == 0)
@@ -43,7 +50,18 @@ Position DropState::getDestination()
 
 Position DropState::computeBestDestination(const Position &start_pos, std::shared_ptr<GameMap> &game_map)
 {
-	return Position(0, 0);
+	Position bestPosition = Position(0,0);
+    int maxHalite = 0;
+    for(int i = 0; i < game_map->getWidth(); ++i){
+        for(int j = 0; j < game_map->getHeight(); ++j){
+            MapCell *mapCell = game_map->at(Position(i,j));
+            if(mapCell->getHalite() > maxHalite && game_map->computeManathanDistance(mapCell->getPosition(), start_pos) < DROPOFF_CHECK_RADIUS){
+                maxHalite = mapCell->getHalite();
+                bestPosition = Position(mapCell->getPosition().getXCoord(), mapCell->getPosition().getYCoord());
+            }
+        }
+    }
+    return bestPosition;
 }
 
 bool DropState::checkForDropoff(std::shared_ptr<GameMap> &game_map, int radius, Position center)

@@ -7,12 +7,15 @@
 
 #include <unordered_map>
 
+class Ship;
+
 class Player
 {
 private:
   int m_id;
   int m_halite;
   std::shared_ptr<Shipyard> m_shipyard;
+  bool m_dropoffThisTurn = false;
 
   std::unordered_map<int, std::shared_ptr<Ship>> m_ships;
   std::unordered_map<int, std::shared_ptr<Dropoff>> m_dropoffs;
@@ -25,12 +28,15 @@ public:
   void updateDropoffs(const int num_dropoffs);
   static std::shared_ptr<Player> generate();
 
+  void Player::setDropoffCreation(bool ff);
+
   // Getter
   std::unordered_map<int, std::shared_ptr<Ship>> getShips() const;
   std::unordered_map<int, std::shared_ptr<Dropoff>> getDropoffs() const;
   std::shared_ptr<Shipyard> getShipyard() const;
   int getHalite() const;
   int getId() const;
+  bool getDropoffCreation() const;
 };
 
 #endif

@@ -173,13 +173,14 @@ void Ship::update(const Ship *ship)
   m_position = ship->m_position;
 }
 
-std::string Ship::update(shared_ptr<GameMap> &game_map)
+std::string Ship::update(shared_ptr<GameMap> &game_map,std::shared_ptr<Player> &me)
 {
   m_shipState->update(this, game_map);
   //TODO: Trouver un moyen de faire en sorte de savoir si on doit inclure ou non les shipyard/dropoffs
   if (!m_shipState->shouldCreateDropoff)
   {
-    if(game_map->at(m_shipState->getDestination())->hasShip() && game_map->computeManathanDistance(m_position, m_shipState->getDestination())<=1){
+    if (game_map->at(m_shipState->getDestination())->hasShip() && game_map->computeManathanDistance(m_position, m_shipState->getDestination()) <= 1)
+    {
       return Command::move(m_entityId, Direction::Still);
     }
     return Command::move(m_entityId, computeNextDirection(m_shipState->getDestination(), game_map, true, true));
@@ -187,7 +188,16 @@ std::string Ship::update(shared_ptr<GameMap> &game_map)
   else
   {
     custom_logger::log("Transforming ship");
-    // return Command::transformShipIntoDropoff(m_entityId);
+    // game_map->at(m_shipState->getDestination())->getHalite() +
+    if ( me->getHalite() >= 4000 && !me->getDropoffCreation())
+    {
+      me->setDropoffCreation(true);
+      return Command::transformShipIntoDropoff(m_entityId);
+    }
+    else{
+      //Avoid ships in drop state to be stuck at waiting the correct amount of halite.
+      // m_shipState->onStateEnter(game_map, this);
+    }
     return Command::move(m_entityId, Direction::Still);
   }
 }

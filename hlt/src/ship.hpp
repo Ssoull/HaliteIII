@@ -3,12 +3,14 @@
 
 #include "dstar.hpp"
 #include "game_map.hpp"
+#include "player.hpp"
 
 #include "../utils/command.hpp"
 
 #include "../state/state.hpp"
 
 class State;
+class Player;
 
 class Ship : public Entity
 {
@@ -38,7 +40,7 @@ public:
 
   // Update function used in main
   // use the game map as paramteter to compute best actions the ship can perform
-  std::string update(std::shared_ptr<GameMap> &game_map);
+  std::string update(std::shared_ptr<GameMap> &game_map, std::shared_ptr<Player> &me);
 
   void setState(std::shared_ptr<State> nextState, std::shared_ptr<GameMap> &game_map);
 

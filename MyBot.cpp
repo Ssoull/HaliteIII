@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
       //Nouveau point d'entrée ?
       //Passer la map à cette fonction, derrière combiner les states et le compute nextdirection pour choisir la destination et la prochaine direction
       //Sorte d'interface pour virer toutes les décisions du mybot
-      command_queue.push_back(ship->update(game_map));
+      command_queue.push_back(ship->update(game_map, me));
 
       // if (game_map->at(*ship)->getHalite() / 10 < ship->getHalite() || game_map->at(*ship)->hasStructure() || ship->isFull())
       // {

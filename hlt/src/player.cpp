@@ -9,6 +9,7 @@ Player::Player(const int player_id, const Position &pos) : m_id(player_id), m_ha
 void Player::update(const int num_ships, const int num_dropoffs, const int halite, const int game_width, const int game_height)
 {
   m_halite = halite;
+  m_dropoffThisTurn = false;
   updateShips(num_ships, game_width, game_height);
   updateDropoffs(num_dropoffs);
 }
@@ -104,4 +105,13 @@ int Player::getHalite() const
 int Player::getId() const
 {
   return m_id;
+}
+
+bool Player::getDropoffCreation() const
+{
+  return m_dropoffThisTurn;
+}
+
+void Player::setDropoffCreation(bool ff){
+  m_dropoffThisTurn = ff;
 }

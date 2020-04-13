@@ -44,6 +44,7 @@ Position HarvestingState::computeBestDestination(const Position &start_pos, std:
     {
       MapCell *mapCell = game_map->at(Position(x, y));
       int distance = game_map->computeManathanDistance(start_pos, mapCell->getPosition());
+      //To avoid division by 0
       if(distance == 0){
           continue;
       }
