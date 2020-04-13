@@ -34,6 +34,7 @@ public:
   // Getters
   int getWidth() const;
   int getHeight() const;
+  int getTotalHalite() const;
   double getCost(const Position &pos) const;
 };
 

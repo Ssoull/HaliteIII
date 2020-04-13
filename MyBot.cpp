@@ -59,7 +59,8 @@ int main(int argc, char *argv[])
     if (
         game.getTurnNumber() <= 200 &&
         me->getHalite() >= constants::SHIP_COST &&
-        !game_map->at(me->getShipyard().get())->hasShip())
+        !game_map->at(me->getShipyard().get())->hasShip() && 
+        game_map->getTotalHalite() >= game.getInitialHalite()*0.33)
     {
       spawn = true;
       command_queue.push_back(me->getShipyard()->spawn());

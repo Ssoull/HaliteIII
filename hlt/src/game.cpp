@@ -21,6 +21,8 @@ Game::Game() : m_turnNumber(0)
   }
   m_me = m_players[m_id];
   m_gameMap = GameMap::generate();
+  m_initialHalite = m_gameMap->getTotalHalite();
+  custom_logger::log("Initial Halite" + std::to_string(m_initialHalite));
 }
 
 void Game::ready(const std::string &name)
@@ -81,6 +83,10 @@ int Game::getTurnNumber() const
 int Game::getId() const
 {
   return m_id;
+}
+
+int Game::getInitialHalite() const {
+  return m_initialHalite;
 }
 
 std::shared_ptr<Player> Game::getMe() const

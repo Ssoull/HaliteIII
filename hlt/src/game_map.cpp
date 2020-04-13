@@ -71,46 +71,56 @@ std::shared_ptr<GameMap> GameMap::generate()
 
 std::vector<Position> GameMap::getPositionsInRadius(Position radiusCenter, int radius)
 {
-  custom_logger::log("Looking for positions in radius with center "+ radiusCenter.to_string());
-  auto positionsInRaidus =  std::vector<Position>();
-  for (int i = radiusCenter.getXCoord()-radius; i < radiusCenter.getXCoord()+radius; ++i)
+  // custom_logger::log("Looking for positions in radius with center " + radiusCenter.to_string());
+  auto positionsInRaidus = std::vector<Position>();
+  for (int i = radiusCenter.getXCoord() - radius; i < radiusCenter.getXCoord() + radius; ++i)
   {
-    for (int j =radiusCenter.getYCoord() -radius; j < radiusCenter.getYCoord()+radius; ++j)
+    for (int j = radiusCenter.getYCoord() - radius; j < radiusCenter.getYCoord() + radius; ++j)
     {
-      custom_logger::log("adding " + normalizePosition(i,j).to_string());
-      //Todo add manathan distance
-      positionsInRaidus.push_back(normalizePosition(i, j));
+      if (computeManathanDistance(radiusCenter, normalizePosition(i, j)))
+      {
+        // custom_logger::log("adding " + normalizePosition(i, j).to_string());
+        positionsInRaidus.push_back(normalizePosition(i, j));
+      }
     }
   }
   return positionsInRaidus;
 }
-Position GameMap::normalizePosition(int x, int y){
+Position GameMap::normalizePosition(int x, int y)
+{
   int normalizedX = x;
   int normalizedY = y;
-  if(x < 0){
-    normalizedX = m_width -1 + x;
+  if (x < 0)
+  {
+    normalizedX = m_width - 1 + x;
   }
-  if(x >= m_width){
+  if (x >= m_width)
+  {
     normalizedX = x - m_width;
   }
-  if(y < 0){
+  if (y < 0)
+  {
     normalizedY = m_height - 1 + y;
   }
-  if(y >= m_height){
+  if (y >= m_height)
+  {
     normalizedY = y - m_height;
   }
   return Position(normalizedX, normalizedY);
 }
 
-int GameMap::computeManathanDistance(Position p1, Position p2) {
+int GameMap::computeManathanDistance(Position p1, Position p2)
+{
   int dx = abs(p1.getXCoord() - p2.getXCoord());
   int dy = abs(p1.getYCoord() - p2.getYCoord());
 
-  if(dx > m_width / 2){
+  if (dx > m_width / 2)
+  {
     dx = m_width - dx;
   }
 
-  if(dy > m_height/2){
+  if (dy > m_height / 2)
+  {
     dy = m_height - dy;
   }
   return dx + dy;
@@ -129,4 +139,15 @@ int GameMap::getHeight() const
 double GameMap::getCost(const Position &pos) const
 {
   return (double)m_cells[pos.getXCoord()][pos.getYCoord()].getHalite() / (double)constants::MOVE_COST_RATIO;
+}
+
+int GameMap::getTotalHalite() const {
+  int totalHalite = 0;
+  for(int i = 0; i < m_width; ++i){
+    for (int j = 0; j < m_height; ++j){
+      // totalHalite += GameMap::at(Position(i,j))->getHalite();
+      totalHalite += m_cells[i][j].getHalite();
+    }
+  }
+  return totalHalite;
 }
