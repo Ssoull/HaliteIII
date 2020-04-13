@@ -66,14 +66,17 @@ void MapCell::setHalite(const int halite)
 void MapCell::markShip(const bool hasShip, const bool isMine)
 {
   m_hasShip = hasShip;
+  m_isMine = isMine;
 }
 
 void MapCell::markShipyard(const bool hasShipyard, const bool isMine)
 {
   m_hasShipyard = hasShipyard;
+  m_isMine = isMine;
 }
 
 void MapCell::markDropoff(const bool hasDropoff, const bool isMine)
 {
   m_hasDropoff = hasDropoff;
+  m_isMine = isMine;
 }

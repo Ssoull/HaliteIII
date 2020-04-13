@@ -3,7 +3,7 @@
 
 #include "state.hpp"
 
-const int DROPOFF_CHECK_RADIUS = 10;
+const int DROPOFF_CHECK_RADIUS = 30;
 
 class DropState : public State
 {

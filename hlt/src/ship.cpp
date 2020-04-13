@@ -121,7 +121,8 @@ void Ship::populateDstar(std::shared_ptr<GameMap> &game_map, const bool include_
       Position currentPosition = Position(x, y);
       MapCell currentMapCell = *game_map->at(currentPosition);
 
-      if (!currentMapCell.hasStructure())
+      double cost = game_map->getCost(currentPosition);
+      if (!currentMapCell.hasStructure() && cost != 0.)
       {
         // To debug the cost on each cell
         // Commented by default otherwise there is to much data displayed in logs
@@ -178,6 +179,9 @@ std::string Ship::update(shared_ptr<GameMap> &game_map)
   //TODO: Trouver un moyen de faire en sorte de savoir si on doit inclure ou non les shipyard/dropoffs
   if (!m_shipState->shouldCreateDropoff)
   {
+    if(game_map->at(m_shipState->getDestination())->hasShip() && game_map->computeManathanDistance(m_position, m_shipState->getDestination())<=1){
+      return Command::move(m_entityId, Direction::Still);
+    }
     return Command::move(m_entityId, computeNextDirection(m_shipState->getDestination(), game_map, true, true));
   }
   else

@@ -4,6 +4,7 @@
 #include "state.hpp"
 
 const int DISTANCE_WEIGHT = 2;
+const int CHECK_DISTANCE = 10;
 
 class HarvestingState : public State
 {
