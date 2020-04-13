@@ -16,8 +16,6 @@ private:
   int m_halite;
   std::shared_ptr<State> m_shipState;
   std::unique_ptr<Dstar> m_pathToDest;
-  Direction m_nextMove;
-  Position m_destination;
 
   Direction directionSelection(const int diff, const int size, const Direction first, const Direction second) const;
   void populateDstar(std::shared_ptr<GameMap> &game_map, const bool include_shipyard, const bool include_dropoffs /*, const double costToMove*/);

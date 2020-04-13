@@ -48,18 +48,19 @@ void Game::update_frame()
 
   for (const auto &player : m_players)
   {
+    bool isMine = player->getId() == m_me->getId();
     for (auto &ship_iterator : player->getShips())
     {
       auto ship = ship_iterator.second;
-      m_gameMap->at(*ship)->markShip(true);
+      m_gameMap->at(*ship)->markShip(true, isMine);
     }
 
-    m_gameMap->at(*player->getShipyard())->markShipyard(true);
+    m_gameMap->at(*player->getShipyard())->markShipyard(true, isMine);
 
     for (auto &dropoff_iterator : player->getDropoffs())
     {
       auto dropoff = dropoff_iterator.second;
-      m_gameMap->at(*dropoff)->markDropoff(true);
+      m_gameMap->at(*dropoff)->markDropoff(true, isMine);
     }
   }
 }

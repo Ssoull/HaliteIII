@@ -4,21 +4,21 @@
 
 #include <memory>
 
-Player::Player(const int playerId, const Position &pos) : m_id(playerId), m_halite(0), m_shipyard(std::make_shared<Shipyard>(playerId, pos)) {}
+Player::Player(const int player_id, const Position &pos) : m_id(player_id), m_halite(0), m_shipyard(std::make_shared<Shipyard>(player_id, pos)) {}
 
-void Player::update(const int numShips, const int numDropoffs, const int halite, const int game_width, const int game_height)
+void Player::update(const int num_ships, const int num_dropoffs, const int halite, const int game_width, const int game_height)
 {
   m_halite = halite;
-  updateShips(numShips, game_width, game_height);
-  updateDropoffs(numDropoffs);
+  updateShips(num_ships, game_width, game_height);
+  updateDropoffs(num_dropoffs);
 }
 
-void Player::updateShips(const int numShips, const int game_width, const int game_height)
+void Player::updateShips(const int num_ships, const int game_width, const int game_height)
 {
   std::vector<int> id_ships;
 
   // Create or update ships
-  for (int i = 0; i < numShips; ++i)
+  for (int i = 0; i < num_ships; ++i)
   {
     std::shared_ptr<Ship> ship = Ship::generate(m_id, game_width, game_height);
     id_ships.push_back(ship->getId());
@@ -51,12 +51,12 @@ void Player::updateShips(const int numShips, const int game_width, const int gam
   }
 }
 
-void Player::updateDropoffs(const int numEntities)
+void Player::updateDropoffs(const int num_dropoffs)
 {
   std::vector<int> id_dropoffs;
 
   // Create dropoff
-  for (int i = 0; i < numEntities; ++i)
+  for (int i = 0; i < num_dropoffs; ++i)
   {
     std::shared_ptr<Dropoff> dropoff = Dropoff::generate(m_id);
     id_dropoffs.push_back(dropoff->getId());
@@ -96,7 +96,12 @@ std::shared_ptr<Shipyard> Player::getShipyard() const
   return m_shipyard;
 }
 
-int Player::getHalite()
+int Player::getHalite() const
 {
   return m_halite;
+}
+
+int Player::getId() const
+{
+  return m_id;
 }

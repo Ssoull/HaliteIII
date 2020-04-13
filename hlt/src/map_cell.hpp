@@ -9,6 +9,8 @@ private:
   Position m_position;
   int m_halite;
 
+  bool m_isMine;
+
   bool m_hasShip;
   bool m_hasShipyard;
   bool m_hasDropoff;
@@ -26,12 +28,13 @@ public:
   bool hasDropoff() const;
   int getHalite() const;
   Position getPosition() const;
+  bool isMine() const;
 
   // Setter
   void setHalite(const int halite);
-  void markShip(const bool hasShip);
-  void markShipyard(const bool hasShip);
-  void markDropoff(const bool hasDropoff);
+  void markShip(const bool hasShip, const bool isMine);
+  void markShipyard(const bool hasShip, const bool isMine);
+  void markDropoff(const bool hasDropoff, const bool isMine);
 };
 
 #endif

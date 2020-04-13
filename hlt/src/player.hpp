@@ -20,16 +20,17 @@ private:
 public:
   Player(const int playerId, const Position &pos);
 
-  void update(const int numShips, const int numDropoffs, const int halite, const int game_width, const int game_height);
-  void updateShips(const int numShips, const int game_width, const int game_height);
-  void updateDropoffs(const int numDropoffs);
+  void update(const int num_ships, const int num_dropoffs, const int halite, const int game_width, const int game_height);
+  void updateShips(const int num_ships, const int game_width, const int game_height);
+  void updateDropoffs(const int num_dropoffs);
   static std::shared_ptr<Player> generate();
 
   // Getter
   std::unordered_map<int, std::shared_ptr<Ship>> getShips() const;
   std::unordered_map<int, std::shared_ptr<Dropoff>> getDropoffs() const;
   std::shared_ptr<Shipyard> getShipyard() const;
-  int getHalite();
+  int getHalite() const;
+  int getId() const;
 };
 
 #endif

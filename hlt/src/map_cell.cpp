@@ -4,6 +4,7 @@ MapCell::MapCell() {}
 
 MapCell::MapCell(const Position &pos, const int halite) : m_position(pos),
                                                           m_halite(halite),
+                                                          m_isMine(false),
                                                           m_hasShip(false),
                                                           m_hasShipyard(false),
                                                           m_hasDropoff(false)
@@ -51,23 +52,28 @@ Position MapCell::getPosition() const
   return m_position;
 }
 
+bool MapCell::isMine() const
+{
+  return m_isMine;
+}
+
 // Setter
 void MapCell::setHalite(const int halite)
 {
   m_halite = halite;
 }
 
-void MapCell::markShip(bool hasShip)
+void MapCell::markShip(const bool hasShip, const bool isMine)
 {
   m_hasShip = hasShip;
 }
 
-void MapCell::markShipyard(bool hasShipyard)
+void MapCell::markShipyard(const bool hasShipyard, const bool isMine)
 {
   m_hasShipyard = hasShipyard;
 }
 
-void MapCell::markDropoff(bool hasDropoff)
+void MapCell::markDropoff(const bool hasDropoff, const bool isMine)
 {
   m_hasDropoff = hasDropoff;
 }

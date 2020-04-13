@@ -30,7 +30,7 @@ void GameMap::update()
   {
     for (int y = 0; y < m_height; ++y)
     {
-      m_cells[x][y].markShip(false);
+      m_cells[x][y].markShip(false, false);
     }
   }
   int update_count;
@@ -141,10 +141,13 @@ double GameMap::getCost(const Position &pos) const
   return (double)m_cells[pos.getXCoord()][pos.getYCoord()].getHalite() / (double)constants::MOVE_COST_RATIO;
 }
 
-int GameMap::getTotalHalite() const {
+int GameMap::getTotalHalite() const
+{
   int totalHalite = 0;
-  for(int i = 0; i < m_width; ++i){
-    for (int j = 0; j < m_height; ++j){
+  for (int i = 0; i < m_width; ++i)
+  {
+    for (int j = 0; j < m_height; ++j)
+    {
       // totalHalite += GameMap::at(Position(i,j))->getHalite();
       totalHalite += m_cells[i][j].getHalite();
     }

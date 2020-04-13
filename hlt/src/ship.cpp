@@ -10,7 +10,6 @@ Ship::Ship(const int ownerId, const int entityId, const Position &pos, const int
                                                                                                                                         m_halite(halite),
                                                                                                                                         m_shipState(std::make_shared<DefaultState>()),
                                                                                                                                         m_pathToDest(std::make_unique<Dstar>(game_width, game_height))
-// m_game_map(shared_ptr<GameMap>(new GameMap()))
 {
 }
 
@@ -67,7 +66,7 @@ Direction Ship::computeNextDirection(const Position &dest, std::shared_ptr<GameM
   custom_logger::log("[Ship::computeNextDirection] Next Step : " + std::to_string(nextStep.x) + ", " +
                      std::to_string(nextStep.y) + ", ID ship : " + std::to_string(m_entityId));
 
-  game_map->at(Position(nextStep.x, nextStep.y))->markShip(true);
+  game_map->at(Position(nextStep.x, nextStep.y))->markShip(true, true);
 
   int dx = nextStep.x - m_position.getXCoord();
   if (dx != 0)
@@ -196,13 +195,6 @@ void Ship::setState(std::shared_ptr<State> nextState, std::shared_ptr<GameMap> &
   m_shipState = nextState;
   m_shipState->onStateEnter(game_map, this);
 }
-
-// void Ship::setState(std::shared_ptr<State> nextState)
-// {
-//   m_shipState->onStateExit();
-//   m_shipState = nextState;
-//   m_shipState->onStateEnter();
-// }
 
 // Getter
 
