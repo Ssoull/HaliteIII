@@ -383,10 +383,21 @@ void Dstar::remove(state u)
  */
 double Dstar::trueDist(state a, state b)
 {
+  int dx = std::abs(b.x - a.x);
+  int dy = std::abs(b.y - a.y);
+  if (dx > (mapSizeX + 1) / 2)
+  {
+    dx = mapSizeX + 1 - dx;
+  }
+  if (dy > (mapSizeY + 1) / 2)
+  {
+    dy = mapSizeY + 1 - dy;
+  }
 
-  float x = a.x - b.x;
-  float y = a.y - b.y;
-  return sqrt(x * x + y * y);
+  return std::sqrt((dx * dx) + (dy * dy));
+  // float x = a.x - b.x;
+  // float y = a.y - b.y;
+  // return sqrt(x * x + y * y);
 }
 
 /* double Dstar::heuristic(state a, state b)
@@ -660,9 +671,9 @@ bool Dstar::replan()
     return false;
   }
 
-  while (cur != s_goal)
+  bool partiallyFound = false;
+  while (cur != s_goal && !partiallyFound)
   {
-
     path.push_back(cur);
     getSucc(cur, n);
 
@@ -676,32 +687,45 @@ bool Dstar::replan()
     double tmin;
     state smin;
 
+    //! Heavy custom_logger !\\
+    custom_logger::log("Current pos " + std::to_string(cur.x) + "-" + std::to_string(cur.y));
+    int count = 0;
     for (i = n.begin(); i != n.end(); i++)
     {
-      // if (occupied(*i))
-      // {
-      //   custom_logger::log("Is occupied continue");
-      //   continue;
-      // }
-
-      double val = cost(cur, *i);
-      double val2 = trueDist(*i, s_goal) + trueDist(s_start, *i); // (Euclidean) cost to goal + cost to pred
-      val += getG(*i);
-
-      if (close(val, cmin))
+      custom_logger::log("Possible coord " + std::to_string(i->x) + "-" + std::to_string(i->y) + " check " + std::to_string(*i == cur));
+      auto it = std::find(path.begin(), path.end(), *i);
+      if (occupied(*i) || path.end() != it)
       {
-        if (tmin > val2)
+        custom_logger::log("Is occupied continue");
+        if (++count == 4)
+        {
+          custom_logger::log("Patially found");
+          partiallyFound = true;
+        }
+        continue;
+      }
+
+      else
+      {
+        double val = cost(cur, *i);
+        double val2 = trueDist(*i, s_goal) + trueDist(s_start, *i); // (Euclidean) cost to goal + cost to pred
+        val += getG(*i);
+
+        if (close(val, cmin))
+        {
+          if (tmin > val2)
+          {
+            tmin = val2;
+            cmin = val;
+            smin = *i;
+          }
+        }
+        else if (val < cmin)
         {
           tmin = val2;
           cmin = val;
           smin = *i;
         }
-      }
-      else if (val < cmin)
-      {
-        tmin = val2;
-        cmin = val;
-        smin = *i;
       }
     }
     n.clear();

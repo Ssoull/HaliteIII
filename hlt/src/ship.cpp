@@ -121,8 +121,7 @@ void Ship::populateDstar(std::shared_ptr<GameMap> &game_map, const bool include_
       Position currentPosition = Position(x, y);
       MapCell currentMapCell = *game_map->at(currentPosition);
 
-      double cost = game_map->getCost(currentPosition);
-      if (!currentMapCell.hasStructure() && cost != 0.)
+      if (!currentMapCell.hasStructure())
       {
         // To debug the cost on each cell
         // Commented by default otherwise there is to much data displayed in logs
@@ -143,11 +142,28 @@ void Ship::populateDstar(std::shared_ptr<GameMap> &game_map, const bool include_
         // Check for other ships
         bool hasShip = currentMapCell.hasShip() ? true : false;
 
+        // If there is a shipyard, dropoff or a owned ship
+        // if (currentMapCell.isMine())
+        // {
         if (hasShipyard || hasDropoff || hasShip)
         {
           m_pathToDest->updateCell(currentPosition, -1);
-          custom_logger::log("[GameMap::populateDstar] Unsafe Cells : " + currentPosition.to_string());
+          custom_logger::log("[Ship::populateDstar] Unsafe Cells : " + currentPosition.to_string());
         }
+        // }
+        // else
+        // {
+        //   if (hasShipyard || hasDropoff || hasShip)
+        //   {
+        //     std::vector<Position> ennemyAura = game_map->getPositionsInRadius(currentPosition, 2);
+
+        //     for (Position cellPos : ennemyAura)
+        //     {
+        //       m_pathToDest->updateCell(cellPos, -1);
+        //       custom_logger::log("[Ship::populateDstar] Unsafe Cells (Ennemy aura) : " + cellPos.to_string());
+        //     }
+        //   }
+        // }
       }
     }
   }
@@ -173,7 +189,7 @@ void Ship::update(const Ship *ship)
   m_position = ship->m_position;
 }
 
-std::string Ship::update(shared_ptr<GameMap> &game_map,std::shared_ptr<Player> &me)
+std::string Ship::update(shared_ptr<GameMap> &game_map, std::shared_ptr<Player> &me)
 {
   m_shipState->update(this, game_map);
   //TODO: Trouver un moyen de faire en sorte de savoir si on doit inclure ou non les shipyard/dropoffs
@@ -189,12 +205,13 @@ std::string Ship::update(shared_ptr<GameMap> &game_map,std::shared_ptr<Player> &
   {
     custom_logger::log("Transforming ship");
     // game_map->at(m_shipState->getDestination())->getHalite() +
-    if ( me->getHalite() >= 4000 && !me->getDropoffCreation())
+    if (me->getHalite() >= 4000 && !me->getDropoffCreation())
     {
       me->setDropoffCreation(true);
       return Command::transformShipIntoDropoff(m_entityId);
     }
-    else{
+    else
+    {
       //Avoid ships in drop state to be stuck at waiting the correct amount of halite.
       // m_shipState->onStateEnter(game_map, this);
     }

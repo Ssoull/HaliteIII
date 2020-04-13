@@ -27,8 +27,6 @@ public:
 
   int computeManathanDistance(Position p1, Position p2);
 
-  //Return all the positions in the given radius around the radius center parameter
-  std::vector<Position> getPositionsInRadius(Position radiusCenter, int radius);
   //Normalize positions to use wrap around map coordinates
   Position normalizePosition(int x, int y);
   // Getters
@@ -36,6 +34,9 @@ public:
   int getHeight() const;
   int getTotalHalite() const;
   double getCost(const Position &pos) const;
+
+  //Return all the positions in the given radius around the radius center parameter
+  std::vector<Position> getPositionsInRadius(Position radiusCenter, int radius);
 };
 
 #endif

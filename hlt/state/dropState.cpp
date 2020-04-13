@@ -19,7 +19,7 @@ void DropState::update(Ship *entity_to_update, std::shared_ptr<GameMap> &game_ma
 
 	if (entity_to_update->getHalite() == 0)
 	{
-        custom_logger::log("Halite Dropped, goind to harvest");
+		custom_logger::log("Halite Dropped, goind to harvest");
 		entity_to_update->setState(std::make_shared<HarvestingState>(), game_map);
 	}
 }
@@ -75,7 +75,6 @@ bool DropState::checkForDropoff(std::shared_ptr<GameMap> &game_map, int radius, 
 		{
 			// if(game_map->at(positionsInRadius[i])->)
 			m_dropoffLocation = positionsInRadius[i];
-            custom_logger::log("Dropoff found "+ m_dropoffLocation.to_string());
 			return true;
 		}
 	}

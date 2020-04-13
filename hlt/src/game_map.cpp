@@ -69,23 +69,6 @@ std::shared_ptr<GameMap> GameMap::generate()
   return map;
 }
 
-std::vector<Position> GameMap::getPositionsInRadius(Position radiusCenter, int radius)
-{
-  // custom_logger::log("Looking for positions in radius with center " + radiusCenter.to_string());
-  auto positionsInRaidus = std::vector<Position>();
-  for (int i = radiusCenter.getXCoord() - radius; i < radiusCenter.getXCoord() + radius; ++i)
-  {
-    for (int j = radiusCenter.getYCoord() - radius; j < radiusCenter.getYCoord() + radius; ++j)
-    {
-      if (computeManathanDistance(radiusCenter, normalizePosition(i, j)))
-      {
-        // custom_logger::log("adding " + normalizePosition(i, j).to_string());
-        positionsInRaidus.push_back(normalizePosition(i, j));
-      }
-    }
-  }
-  return positionsInRaidus;
-}
 Position GameMap::normalizePosition(int x, int y)
 {
   int normalizedX = x;
@@ -153,4 +136,22 @@ int GameMap::getTotalHalite() const
     }
   }
   return totalHalite;
+}
+
+std::vector<Position> GameMap::getPositionsInRadius(Position radiusCenter, int radius)
+{
+  // custom_logger::log("Looking for positions in radius with center " + radiusCenter.to_string());
+  auto positionsInRaidus = std::vector<Position>();
+  for (int i = radiusCenter.getXCoord() - radius; i < radiusCenter.getXCoord() + radius; ++i)
+  {
+    for (int j = radiusCenter.getYCoord() - radius; j < radiusCenter.getYCoord() + radius; ++j)
+    {
+      if (computeManathanDistance(radiusCenter, normalizePosition(i, j)))
+      {
+        // custom_logger::log("adding " + normalizePosition(i, j).to_string());
+        positionsInRaidus.push_back(normalizePosition(i, j));
+      }
+    }
+  }
+  return positionsInRaidus;
 }
