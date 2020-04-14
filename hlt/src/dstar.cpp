@@ -687,7 +687,7 @@ bool Dstar::replan()
     double tmin;
     state smin;
 
-    //! Heavy custom_logger !\\
+    //! Heavy custom_logger !
     custom_logger::log("Current pos " + std::to_string(cur.x) + "-" + std::to_string(cur.y));
     int count = 0;
     for (i = n.begin(); i != n.end(); i++)
