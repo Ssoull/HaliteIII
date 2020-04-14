@@ -25,7 +25,7 @@ public:
   void update();
   static std::shared_ptr<GameMap> generate();
 
-  int computeManathanDistance(Position p1, Position p2);
+  int computeManathanDistance(const Position &p1, const Position &p2) const;
 
   //Normalize positions to use wrap around map coordinates
   Position normalizePosition(int x, int y);

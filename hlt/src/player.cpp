@@ -112,6 +112,7 @@ bool Player::getDropoffCreation() const
   return m_dropoffThisTurn;
 }
 
-void Player::setDropoffCreation(bool ff){
+void Player::setDropoffCreation(bool ff)
+{
   m_dropoffThisTurn = ff;
 }

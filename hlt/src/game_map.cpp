@@ -92,7 +92,7 @@ Position GameMap::normalizePosition(int x, int y)
   return Position(normalizedX, normalizedY);
 }
 
-int GameMap::computeManathanDistance(Position p1, Position p2)
+int GameMap::computeManathanDistance(const Position &p1, const Position &p2) const
 {
   int dx = abs(p1.getXCoord() - p2.getXCoord());
   int dy = abs(p1.getYCoord() - p2.getYCoord());
@@ -108,6 +108,7 @@ int GameMap::computeManathanDistance(Position p1, Position p2)
   }
   return dx + dy;
 }
+
 // Getters
 int GameMap::getWidth() const
 {

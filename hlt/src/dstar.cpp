@@ -191,17 +191,6 @@ void Dstar::setRHS(state u, double rhs)
  */
 double Dstar::eightCondist(state a, state b)
 {
-  // double temp;
-  // double min = fabs(a.x - b.x);
-  // double max = fabs(a.y - b.y);
-  // if (min > max)
-  // {
-  //   double temp = min;
-  //   min = max;
-  //   max = temp;
-  // }
-  // return ((M_SQRT2 - 1.0) * min + max);
-
   // Working on a solution to implement toroidal distance
   int dx = std::abs(b.x - a.x);
   int dy = std::abs(b.y - a.y);
@@ -688,18 +677,18 @@ bool Dstar::replan()
     state smin;
 
     //! Heavy custom_logger !
-    custom_logger::log("Current pos " + std::to_string(cur.x) + "-" + std::to_string(cur.y));
+    // custom_logger::log("Current pos " + std::to_string(cur.x) + "-" + std::to_string(cur.y));
     int count = 0;
     for (i = n.begin(); i != n.end(); i++)
     {
-      custom_logger::log("Possible coord " + std::to_string(i->x) + "-" + std::to_string(i->y) + " check " + std::to_string(*i == cur));
+      // custom_logger::log("Possible coord " + std::to_string(i->x) + "-" + std::to_string(i->y) + " check " + std::to_string(*i == cur));
       auto it = std::find(path.begin(), path.end(), *i);
       if (occupied(*i) || path.end() != it)
       {
-        custom_logger::log("Is occupied continue");
+        // custom_logger::log("Is occupied continue");
         if (++count == 4)
         {
-          custom_logger::log("Patially found");
+          // custom_logger::log("Patially found");
           partiallyFound = true;
         }
         continue;

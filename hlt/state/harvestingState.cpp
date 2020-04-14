@@ -45,13 +45,14 @@ Position HarvestingState::computeBestDestination(const Position &start_pos, std:
       MapCell *mapCell = game_map->at(Position(x, y));
       int distance = game_map->computeManathanDistance(start_pos, mapCell->getPosition());
       //To avoid division by 0
-      if(distance == 0){
-          continue;
+      if (distance == 0)
+      {
+        continue;
       }
-      if (((mapCell->getHalite()/(game_map->computeManathanDistance(start_pos, mapCell->getPosition())*DISTANCE_WEIGHT))/(distanceToClosestDropoff(mapCell->getPosition(), game_map)*DROPOFF_DISTANCE_WEIGHT)) > maxHalite && mapCell->isOccupied() == false)
+      if (((mapCell->getHalite() / (game_map->computeManathanDistance(start_pos, mapCell->getPosition()) * DISTANCE_WEIGHT)) / (distanceToClosestDropoff(mapCell->getPosition(), game_map) * DROPOFF_DISTANCE_WEIGHT)) > maxHalite && mapCell->isOccupied() == false)
       {
         bestPositionTemp = Position(x, y);
-        maxHalite = (mapCell->getHalite()/(game_map->computeManathanDistance(start_pos, mapCell->getPosition())*DISTANCE_WEIGHT))/(distanceToClosestDropoff(mapCell->getPosition(), game_map)*DROPOFF_DISTANCE_WEIGHT);
+        maxHalite = (mapCell->getHalite() / (game_map->computeManathanDistance(start_pos, mapCell->getPosition()) * DISTANCE_WEIGHT)) / (distanceToClosestDropoff(mapCell->getPosition(), game_map) * DROPOFF_DISTANCE_WEIGHT);
       }
     }
   }
@@ -59,20 +60,26 @@ Position HarvestingState::computeBestDestination(const Position &start_pos, std:
   return bestPositionTemp;
 }
 
-int HarvestingState::distanceToClosestDropoff(Position &start_pos, std::shared_ptr<GameMap> &game_map){
+int HarvestingState::distanceToClosestDropoff(Position &start_pos, std::shared_ptr<GameMap> &game_map)
+{
   int minDistance = INT_MAX;
-  for(int x = 0; x < game_map->getWidth(); ++x){
-    for(int y = 0; y < game_map->getHeight(); ++y){
-      MapCell *mapCell = game_map->at(Position(x,y));
-      if(mapCell->hasDropoff() || mapCell->hasShipyard()){
-        if(game_map->computeManathanDistance(start_pos, mapCell->getPosition()) < minDistance){
+  for (int x = 0; x < game_map->getWidth(); ++x)
+  {
+    for (int y = 0; y < game_map->getHeight(); ++y)
+    {
+      MapCell *mapCell = game_map->at(Position(x, y));
+      if (mapCell->hasDropoff() || mapCell->hasShipyard())
+      {
+        if (game_map->computeManathanDistance(start_pos, mapCell->getPosition()) < minDistance)
+        {
           // custom_logger::log("Dropoff found at " + Position(mapCell->getPosition().getXCoord(),mapCell->getPosition().getYCoord()).to_string());
           minDistance = game_map->computeManathanDistance(start_pos, mapCell->getPosition());
         }
       }
     }
   }
-  if(minDistance ==0){
+  if (minDistance == 0)
+  {
     return 1;
   }
   return minDistance;

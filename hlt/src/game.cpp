@@ -86,7 +86,8 @@ int Game::getId() const
   return m_id;
 }
 
-int Game::getInitialHalite() const {
+int Game::getInitialHalite() const
+{
   return m_initialHalite;
 }
 
