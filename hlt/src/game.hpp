@@ -6,6 +6,7 @@
 
 #include <vector>
 
+// Game class
 class Game
 {
 private:

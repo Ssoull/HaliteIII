@@ -48,7 +48,7 @@ void Game::update_frame()
 
   for (const auto &player : m_players)
   {
-    bool isMine = player->getId() == m_me->getId();
+    bool isMine = player->getId() == m_me->getId(); // Determine if we are the player in the loop
     for (auto &ship_iterator : player->getShips())
     {
       auto ship = ship_iterator.second;

@@ -21,6 +21,7 @@ void Player::updateShips(const int num_ships, const int game_width, const int ga
   // Create or update ships
   for (int i = 0; i < num_ships; ++i)
   {
+    // We have to generate ship to get the data from input stream
     std::shared_ptr<Ship> ship = Ship::generate(m_id, game_width, game_height);
     id_ships.push_back(ship->getId());
 
@@ -59,6 +60,7 @@ void Player::updateDropoffs(const int num_dropoffs)
   // Create dropoff
   for (int i = 0; i < num_dropoffs; ++i)
   {
+    // We have to generate dropoff to get the data from input stream
     std::shared_ptr<Dropoff> dropoff = Dropoff::generate(m_id);
     id_dropoffs.push_back(dropoff->getId());
 
@@ -71,6 +73,7 @@ void Player::updateDropoffs(const int num_dropoffs)
   }
 }
 
+// Generate the player from the input stream
 std::shared_ptr<Player> Player::generate()
 {
   int player_id;

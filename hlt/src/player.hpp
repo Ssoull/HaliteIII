@@ -7,8 +7,10 @@
 
 #include <unordered_map>
 
+// These class are init later
 class Ship;
 
+// Player class
 class Player
 {
 private:
@@ -17,8 +19,8 @@ private:
   std::shared_ptr<Shipyard> m_shipyard;
   bool m_dropoffThisTurn = false;
 
-  std::unordered_map<int, std::shared_ptr<Ship>> m_ships;
-  std::unordered_map<int, std::shared_ptr<Dropoff>> m_dropoffs;
+  std::unordered_map<int, std::shared_ptr<Ship>> m_ships;       // Unordered Map of all the player's ships
+  std::unordered_map<int, std::shared_ptr<Dropoff>> m_dropoffs; // Unordered Map of all the player's dropoffs
 
 public:
   Player(const int playerId, const Position &pos);

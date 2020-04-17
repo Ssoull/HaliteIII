@@ -7,6 +7,7 @@
 
 #include <string>
 
+// Shipyard class inherite from Entity class
 class Shipyard : public Entity
 {
 public:

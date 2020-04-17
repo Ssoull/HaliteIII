@@ -3,6 +3,7 @@
 
 #include "position.hpp"
 
+// Entity class
 class Entity
 {
 protected:

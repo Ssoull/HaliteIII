@@ -3,6 +3,7 @@
 
 #include <iostream>
 
+// Enumaration for the different direction
 enum class Direction : char
 {
   North = 'n',
@@ -12,6 +13,7 @@ enum class Direction : char
   Still = 'o',
 };
 
+// Position class
 class Position
 {
 private:

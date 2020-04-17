@@ -3,18 +3,16 @@
 
 #include "map_cell.hpp"
 #include "entity.hpp"
-#include "chunk.hpp"
 #include "dstar.hpp"
 
 #include <vector>
 
+// Game map class
 class GameMap
 {
 private:
-  int m_width, m_height;
-  std::vector<std::vector<MapCell>> m_cells;
-  std::vector<Chunk> m_chunkList;
-  std::vector<Position> m_unsafeCells;
+  int m_width, m_height;                     // Width and height of the map
+  std::vector<std::vector<MapCell>> m_cells; // Contains all the cells of the map
 
 public:
   GameMap(const int width, const int height);

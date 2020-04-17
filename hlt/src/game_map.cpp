@@ -44,6 +44,7 @@ void GameMap::update()
   }
 }
 
+// Generate the game map from the input stream
 std::shared_ptr<GameMap> GameMap::generate()
 {
   int width, height;
@@ -120,11 +121,13 @@ int GameMap::getHeight() const
   return m_height;
 }
 
+// Return the cost of a cell based on the cost movement
 double GameMap::getCost(const Position &pos) const
 {
   return (double)m_cells[pos.getXCoord()][pos.getYCoord()].getHalite() / (double)constants::MOVE_COST_RATIO;
 }
 
+// Get the total Halite of the map
 int GameMap::getTotalHalite() const
 {
   int totalHalite = 0;

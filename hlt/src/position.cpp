@@ -44,6 +44,7 @@ bool Position::operator!=(const Position &other) const
   return m_coordX != other.m_coordX || m_coordY != other.m_coordY;
 }
 
+// Operator to send data in output stream
 std::ostream &Position::operator<<(std::ostream &out)
 {
   out << m_coordX << ' ' << m_coordY;
@@ -51,6 +52,7 @@ std::ostream &Position::operator<<(std::ostream &out)
   return out;
 }
 
+// Operator to get data from input stream
 std::istream &Position::operator>>(std::istream &in)
 {
   in >> m_coordX >> m_coordY;
