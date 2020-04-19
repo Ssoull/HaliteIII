@@ -70,6 +70,7 @@ std::shared_ptr<GameMap> GameMap::generate()
   return map;
 }
 
+//Changes x and y coordinates passed in parameters to match the "wrap around" map
 Position GameMap::normalizePosition(int x, int y)
 {
   int normalizedX = x;
@@ -135,22 +136,24 @@ int GameMap::getTotalHalite() const
   {
     for (int j = 0; j < m_height; ++j)
     {
-      // totalHalite += GameMap::at(Position(i,j))->getHalite();
       totalHalite += m_cells[i][j].getHalite();
     }
   }
   return totalHalite;
 }
 
+//Return all the cells in a given radius around a given position
 std::vector<Position> GameMap::getPositionsInRadius(Position radiusCenter, int radius)
 {
   // custom_logger::log("Looking for positions in radius with center " + radiusCenter.to_string());
   auto positionsInRaidus = std::vector<Position>();
+  //Looking at all the cells in a rectangle around the ship
   for (int i = radiusCenter.getXCoord() - radius; i < radiusCenter.getXCoord() + radius; ++i)
   {
     for (int j = radiusCenter.getYCoord() - radius; j < radiusCenter.getYCoord() + radius; ++j)
     {
-      if (computeManathanDistance(radiusCenter, normalizePosition(i, j)))
+      //If the cell distance from the ship is inferior to the radius it's added to the list
+      if (computeManathanDistance(radiusCenter, normalizePosition(i, j))<= radius)
       {
         // custom_logger::log("adding " + normalizePosition(i, j).to_string());
         positionsInRaidus.push_back(normalizePosition(i, j));

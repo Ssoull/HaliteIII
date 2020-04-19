@@ -5,22 +5,23 @@
 
 void HarvestingState::update(Ship *entity_to_update, std::shared_ptr<GameMap> &game_map)
 {
+  //Recompute the best destination when the current destination is already occypied by a ship
   if (game_map->at(m_bestPosition)->isOccupied() == true && entity_to_update->getPosition() != m_bestPosition)
   {
     // custom_logger::log("Cell occupied, replaning");
-    m_bestPosition = computeBestDestination(Position(0, 0), game_map);
+    m_bestPosition = computeBestDestination(entity_to_update->getPosition(), game_map);
   }
-
+  //Change state when the ship is full or with more than 900halite
   if (entity_to_update->isFull() || entity_to_update->getHalite() > 900)
   {
     entity_to_update->setState(std::make_shared<DropState>(), game_map);
   }
 
+  //Recompute destination when the cell is empty
   if (game_map->at(entity_to_update->getPosition())->getHalite() == 0)
   {
     m_bestPosition = computeBestDestination(entity_to_update->getPosition(), game_map);
   }
-  //TODO add looking for neighbors for halite when cell halite is low
 }
 
 void HarvestingState::onStateEnter(std::shared_ptr<GameMap> &game_map, Ship *entity)
@@ -34,6 +35,9 @@ void HarvestingState::onStateExit()
   //Actions to perform on state exit
 }
 
+
+//Check for the best destination for the ship
+//It uses the halite amount, the distance between the ship and the cell and the distance between the cell and the closest dropoff or shipyard
 Position HarvestingState::computeBestDestination(const Position &start_pos, std::shared_ptr<GameMap> &game_map)
 {
   Position bestPositionTemp = Position(0, 0);
@@ -60,6 +64,7 @@ Position HarvestingState::computeBestDestination(const Position &start_pos, std:
   return bestPositionTemp;
 }
 
+//Return the distance to the closest dropoff to use it as a weight in the best destination computing
 int HarvestingState::distanceToClosestDropoff(Position &start_pos, std::shared_ptr<GameMap> &game_map)
 {
   int minDistance = INT_MAX;
@@ -78,6 +83,7 @@ int HarvestingState::distanceToClosestDropoff(Position &start_pos, std::shared_p
       }
     }
   }
+  //As the distance is used as a weight this will avoid divisions by 0
   if (minDistance == 0)
   {
     return 1;

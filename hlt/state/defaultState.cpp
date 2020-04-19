@@ -1,11 +1,10 @@
 #include "defaultState.hpp"
 
-#include "../utils/log.hpp"
-
 #include "harvestingState.hpp"
 
 void DefaultState::update(Ship *entity_to_update, std::shared_ptr<GameMap> &game_map)
 {
+  //On the first update the default state will change the ship state to harvesting state
   entity_to_update->setState(std::make_shared<HarvestingState>(), game_map);
 }
 

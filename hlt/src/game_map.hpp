@@ -22,7 +22,7 @@ public:
 
   void update();
   static std::shared_ptr<GameMap> generate();
-
+  //Compute the manathan distance between 2 cells
   int computeManathanDistance(const Position &p1, const Position &p2) const;
 
   //Normalize positions to use wrap around map coordinates

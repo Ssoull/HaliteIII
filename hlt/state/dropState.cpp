@@ -8,6 +8,9 @@ void DropState::update(Ship *entity_to_update, std::shared_ptr<GameMap> &game_ma
   if (willBeDropoff && entity_to_update->getPosition() == m_bestDropLocation)
   {
     shouldCreateDropoff = true;
+    //Even if the ship is on the dropoff location the conditions to create it may not be matched
+    //Every turn the ship is stuck in place it will check for a dropoff with a larger radius
+    //If a dropoff is found before the requirements to create a dropoff are met it will head to this dropoff
     if (checkForDropoff(game_map, DROPOFF_CHECK_RADIUS + m_nbOfTurnsStuck, entity_to_update->getPosition()))
     {
       m_bestDropLocation = m_dropoffLocation;
@@ -19,9 +22,10 @@ void DropState::update(Ship *entity_to_update, std::shared_ptr<GameMap> &game_ma
     }
   }
 
+  //When the ship is empty it will return to the harvesting state
   if (entity_to_update->getHalite() == 0)
   {
-    // custom_logger::log("Halite Dropped, goind to harvest");
+    // custom_logger::log("Halite Dropped, going to harvest");
     entity_to_update->setState(std::make_shared<HarvestingState>(), game_map);
   }
 }
@@ -36,6 +40,7 @@ void DropState::onStateEnter(std::shared_ptr<GameMap> &game_map, Ship *entity)
   }
   else
   {
+    //When no dropoff found the ship will become a dropoff
     willBeDropoff = true;
     m_bestDropLocation = computeBestDestination(entity->getPosition(), game_map);
   }
@@ -50,6 +55,7 @@ Position DropState::getDestination()
   return m_bestDropLocation;
 }
 
+//Used when no dropoff is found to find the best place to create a dropoff
 Position DropState::computeBestDestination(const Position &start_pos, std::shared_ptr<GameMap> &game_map)
 {
   Position bestPosition = Position(0, 0);
@@ -78,7 +84,6 @@ bool DropState::checkForDropoff(std::shared_ptr<GameMap> &game_map, int radius, 
     MapCell *mapCell = game_map->at(positionsInRadius[i]);
     if ((mapCell->hasDropoff() || mapCell->hasShipyard()) && mapCell->isMine())
     {
-      // if(game_map->at(positionsInRadius[i])->)
       m_dropoffLocation = positionsInRadius[i];
       return true;
     }
