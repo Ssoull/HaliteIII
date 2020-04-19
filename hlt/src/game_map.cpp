@@ -1,8 +1,11 @@
-#include <algorithm>
 #include "game_map.hpp"
-#include "../utils/input.hpp"
 
-GameMap::GameMap()
+#include "../utils/input.hpp"
+#include "../utils/constants.hpp"
+
+#include <algorithm>
+
+GameMap::GameMap(const int width, const int height) : m_width(width), m_height(height), m_cells(width, std::vector<MapCell>(height))
 {
 }
 
@@ -23,11 +26,11 @@ MapCell *GameMap::at(const Entity *entity)
 
 void GameMap::update()
 {
-  for (int y = 0; y < m_height; ++y)
+  for (int x = 0; x < m_width; ++x)
   {
-    for (int x = 0; x < m_width; ++x)
+    for (int y = 0; y < m_height; ++y)
     {
-      m_cells[y][x].markShip(false);
+      m_cells[x][y].markShip(false, false);
     }
   }
   int update_count;
@@ -37,31 +40,75 @@ void GameMap::update()
   {
     int x, y, halite;
     input::get_sstream() >> x >> y >> halite;
-    m_cells[y][x].setHalite(halite);
+    m_cells[x][y].setHalite(halite);
   }
 }
 
+// Generate the game map from the input stream
 std::shared_ptr<GameMap> GameMap::generate()
 {
-  std::shared_ptr<GameMap> map = std::make_shared<GameMap>();
+  int width, height;
+  input::get_sstream() >> width >> height;
 
-  input::get_sstream() >> map->m_width >> map->m_height;
+  std::shared_ptr<GameMap> map = std::make_shared<GameMap>(width, height);
 
-  map->m_cells.resize((size_t)map->m_width);
-  for (int x = 0; x < map->m_width; ++x)
+  // The board is stored row by row
+  for (int y = 0; y < map->m_height; ++y)
   {
     auto in = input::get_sstream();
-
-    map->m_cells[x].reserve((size_t)map->m_height);
-    for (int y = 0; y < map->m_height; ++y)
+    for (int x = 0; x < map->m_width; ++x)
     {
       int halite;
       in >> halite;
 
-      map->m_cells[x].push_back(MapCell(Position(x, y), halite));
+      map->m_cells[x][y] = MapCell(Position(x, y), halite);
+      // To debug the generation
+      // Commented by default otherwise there is to much data displayed in logs
+      // custom_logger::log(Position(x, y).to_string() + ", halite : " + std::to_string(halite));
     }
   }
   return map;
+}
+
+//Changes x and y coordinates passed in parameters to match the "wrap around" map
+Position GameMap::normalizePosition(int x, int y)
+{
+  int normalizedX = x;
+  int normalizedY = y;
+  if (x < 0)
+  {
+    normalizedX = m_width - 1 + x;
+  }
+  if (x >= m_width)
+  {
+    normalizedX = x - m_width;
+  }
+  if (y < 0)
+  {
+    normalizedY = m_height - 1 + y;
+  }
+  if (y >= m_height)
+  {
+    normalizedY = y - m_height;
+  }
+  return Position(normalizedX, normalizedY);
+}
+
+int GameMap::computeManathanDistance(const Position &p1, const Position &p2) const
+{
+  int dx = abs(p1.getXCoord() - p2.getXCoord());
+  int dy = abs(p1.getYCoord() - p2.getYCoord());
+
+  if (dx > m_width / 2)
+  {
+    dx = m_width - dx;
+  }
+
+  if (dy > m_height / 2)
+  {
+    dy = m_height - dy;
+  }
+  return dx + dy;
 }
 
 // Getters
@@ -75,37 +122,43 @@ int GameMap::getHeight() const
   return m_height;
 }
 
-std::vector<Position> GameMap::getUnsafeCells(bool includeShipyard, bool includeDropoffs)
+// Return the cost of a cell based on the cost movement
+double GameMap::getCost(const Position &pos) const
 {
-  m_unsafeCells.clear();
+  return (double)m_cells[pos.getXCoord()][pos.getYCoord()].getHalite() / (double)constants::MOVE_COST_RATIO;
+}
 
-  for (int x = 0; x < m_cells.size(); ++x)
+// Get the total Halite of the map
+int GameMap::getTotalHalite() const
+{
+  int totalHalite = 0;
+  for (int i = 0; i < m_width; ++i)
   {
-    for (int y = 0; y < m_cells[x].size(); ++y)
+    for (int j = 0; j < m_height; ++j)
     {
-      if (m_cells[x][y].hasStructure())
-      {
-        //Check if the cell has a shipyard on it
-        //If yes and if we want to include the shipyard in unsafe cells it's added to the list
-        if (m_cells[x][y].hasShipyard() && includeShipyard)
-        {
-          m_unsafeCells.push_back(m_cells[x][y].getPosition());
-        }
+      totalHalite += m_cells[i][j].getHalite();
+    }
+  }
+  return totalHalite;
+}
 
-        //Check for dropoffs if the dropoffs are included in the cells to mark as unsafe
-        if (m_cells[x][y].hasDropoff() && includeDropoffs)
-        {
-          m_unsafeCells.push_back(m_cells[x][y].getPosition());
-        }
-      }
-
-      //Check for other ships
-      if (m_cells[x][y].hasShip())
+//Return all the cells in a given radius around a given position
+std::vector<Position> GameMap::getPositionsInRadius(Position radiusCenter, int radius)
+{
+  // custom_logger::log("Looking for positions in radius with center " + radiusCenter.to_string());
+  auto positionsInRaidus = std::vector<Position>();
+  //Looking at all the cells in a rectangle around the ship
+  for (int i = radiusCenter.getXCoord() - radius; i < radiusCenter.getXCoord() + radius; ++i)
+  {
+    for (int j = radiusCenter.getYCoord() - radius; j < radiusCenter.getYCoord() + radius; ++j)
+    {
+      //If the cell distance from the ship is inferior to the radius it's added to the list
+      if (computeManathanDistance(radiusCenter, normalizePosition(i, j))<= radius)
       {
-        m_unsafeCells.push_back(m_cells[x][y].getPosition());
+        // custom_logger::log("adding " + normalizePosition(i, j).to_string());
+        positionsInRaidus.push_back(normalizePosition(i, j));
       }
     }
   }
-
-  return m_unsafeCells;
+  return positionsInRaidus;
 }

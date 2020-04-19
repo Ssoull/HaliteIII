@@ -13,7 +13,7 @@ Game::Game() : m_turnNumber(0)
   std::stringstream input(input::get_string());
   input >> num_players >> m_id;
 
-  custom_logger::open(m_id);
+  // custom_logger::open(m_id);
 
   for (int i = 0; i < num_players; ++i)
   {
@@ -21,6 +21,8 @@ Game::Game() : m_turnNumber(0)
   }
   m_me = m_players[m_id];
   m_gameMap = GameMap::generate();
+  m_initialHalite = m_gameMap->getTotalHalite();
+  // custom_logger::log("Initial Halite" + std::to_string(m_initialHalite));
 }
 
 void Game::ready(const std::string &name)
@@ -31,7 +33,7 @@ void Game::ready(const std::string &name)
 void Game::update_frame()
 {
   input::get_sstream() >> m_turnNumber;
-  custom_logger::log("=============== TURN " + std::to_string(m_turnNumber) + " ================");
+  // custom_logger::log("=============== TURN " + std::to_string(m_turnNumber) + " ================");
 
   for (size_t i = 0; i < m_players.size(); ++i)
   {
@@ -46,18 +48,19 @@ void Game::update_frame()
 
   for (const auto &player : m_players)
   {
+    bool isMine = player->getId() == m_me->getId(); // Determine if we are the player in the loop
     for (auto &ship_iterator : player->getShips())
     {
       auto ship = ship_iterator.second;
-      m_gameMap->at(*ship)->markShip(true);
+      m_gameMap->at(*ship)->markShip(true, isMine);
     }
 
-    m_gameMap->at(*player->getShipyard())->markShipyard(true);
+    m_gameMap->at(*player->getShipyard())->markShipyard(true, isMine);
 
     for (auto &dropoff_iterator : player->getDropoffs())
     {
       auto dropoff = dropoff_iterator.second;
-      m_gameMap->at(*dropoff)->markDropoff(true);
+      m_gameMap->at(*dropoff)->markDropoff(true, isMine);
     }
   }
 }
@@ -81,6 +84,11 @@ int Game::getTurnNumber() const
 int Game::getId() const
 {
   return m_id;
+}
+
+int Game::getInitialHalite() const
+{
+  return m_initialHalite;
 }
 
 std::shared_ptr<Player> Game::getMe() const
