@@ -30,7 +30,7 @@ void custom_logger::open(int bot_id)
 {
   if (has_opened)
   {
-    custom_logger::log("Error: log: tried to open(" + std::to_string(bot_id) + ") but we have already opened before.");
+    // custom_logger::log("Error: log: tried to open(" + std::to_string(bot_id) + ") but we have already opened before.");
     exit(1);
   }
 

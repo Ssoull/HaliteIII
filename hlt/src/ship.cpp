@@ -27,15 +27,15 @@ std::string Ship::move(const Direction direction) const
 Direction Ship::computeNextDirection(const Position &dest, std::shared_ptr<GameMap> &game_map,
                                      const bool include_shipyard, const bool include_dropoffs)
 {
-  custom_logger::log("[Ship::computeNextDirection] Ship id : " + std::to_string(m_entityId));
-  custom_logger::log("[Ship::computeNextDirection] Current cell : " + m_position.to_string());
-  custom_logger::log("[Ship::computeNextDirection] Destination cell : " + dest.to_string());
+  // // custom_logger::log("[Ship::computeNextDirection] Ship id : " + std::to_string(m_entityId));
+  // custom_logger::log("[Ship::computeNextDirection] Current cell : " + m_position.to_string());
+  // custom_logger::log("[Ship::computeNextDirection] Destination cell : " + dest.to_string());
 
   // Check if the ship have enough halite to move
   double costToMove = game_map->getCost(m_position);
   if (m_halite < costToMove) // Must not be equal because if current halite=0 and cost=0, the ship can move
   {
-    custom_logger::log("[Ship::computeNextDirection] Not enough halite : " + std::to_string(m_halite) + ", Cost to move : " + std::to_string(costToMove));
+    // custom_logger::log("[Ship::computeNextDirection] Not enough halite : " + std::to_string(m_halite) + ", Cost to move : " + std::to_string(costToMove));
     return Direction::Still;
   }
 
@@ -67,8 +67,8 @@ Direction Ship::computeNextDirection(const Position &dest, std::shared_ptr<GameM
     return Direction::Still; // The ship stay at his position
   }
 
-  custom_logger::log("[Ship::computeNextDirection] Next Step : " + std::to_string(nextStep.x) + ", " +
-                     std::to_string(nextStep.y) + ", ID ship : " + std::to_string(m_entityId));
+  // custom_logger::log("[Ship::computeNextDirection] Next Step : " + std::to_string(nextStep.x) + ", " +
+                    //  std::to_string(nextStep.y) + ", ID ship : " + std::to_string(m_entityId));
 
   game_map->at(Position(nextStep.x, nextStep.y))->markShip(true, true); // We mark the next coordinates of the ship as unsafe
 
@@ -149,7 +149,7 @@ void Ship::populateDstar(std::shared_ptr<GameMap> &game_map, const bool include_
         if (hasShipyard || hasDropoff || hasShip)
         {
           m_pathToDest->updateCell(currentPosition, -1);
-          custom_logger::log("[Ship::populateDstar] Unsafe Cells : " + currentPosition.to_string());
+          // custom_logger::log("[Ship::populateDstar] Unsafe Cells : " + currentPosition.to_string());
         }
       }
     }
@@ -189,7 +189,8 @@ std::string Ship::update(shared_ptr<GameMap> &game_map, std::shared_ptr<Player> 
   }
   else
   {
-    custom_logger::log("Transforming ship");
+    // custom_logger::log("Transforming ship");
+    // game_map->at(m_shipState->getDestination())->getHalite() +
     if (me->getHalite() >= 4000 && !me->getDropoffCreation())
     {
       me->setDropoffCreation(true);

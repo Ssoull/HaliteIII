@@ -7,7 +7,7 @@ void HarvestingState::update(Ship *entity_to_update, std::shared_ptr<GameMap> &g
 {
   if (game_map->at(m_bestPosition)->isOccupied() == true && entity_to_update->getPosition() != m_bestPosition)
   {
-    custom_logger::log("Cell occupied, replaning");
+    // custom_logger::log("Cell occupied, replaning");
     m_bestPosition = computeBestDestination(Position(0, 0), game_map);
   }
 
@@ -56,7 +56,7 @@ Position HarvestingState::computeBestDestination(const Position &start_pos, std:
       }
     }
   }
-  custom_logger::log("[HarvestingState::computeBestDestination] Best Pos : " + bestPositionTemp.to_string());
+  // custom_logger::log("[HarvestingState::computeBestDestination] Best Pos : " + bestPositionTemp.to_string());
   return bestPositionTemp;
 }
 

@@ -21,7 +21,7 @@ void DropState::update(Ship *entity_to_update, std::shared_ptr<GameMap> &game_ma
 
   if (entity_to_update->getHalite() == 0)
   {
-    custom_logger::log("Halite Dropped, goind to harvest");
+    // custom_logger::log("Halite Dropped, goind to harvest");
     entity_to_update->setState(std::make_shared<HarvestingState>(), game_map);
   }
 }
@@ -29,7 +29,7 @@ void DropState::update(Ship *entity_to_update, std::shared_ptr<GameMap> &game_ma
 void DropState::onStateEnter(std::shared_ptr<GameMap> &game_map, Ship *entity)
 {
   //Check if there is a dropoff in surrondings
-  custom_logger::log("Entering drop state");
+  // custom_logger::log("Entering drop state");
   if (checkForDropoff(game_map, DROPOFF_CHECK_RADIUS, entity->getPosition()))
   {
     m_bestDropLocation = m_dropoffLocation;
@@ -71,7 +71,7 @@ Position DropState::computeBestDestination(const Position &start_pos, std::share
 
 bool DropState::checkForDropoff(std::shared_ptr<GameMap> &game_map, int radius, Position center)
 {
-  custom_logger::log("Checking fro dropoff");
+  // custom_logger::log("Checking fro dropoff");
   std::vector<Position> positionsInRadius = game_map->getPositionsInRadius(center, radius);
   for (int i = 0; i < positionsInRadius.size(); ++i)
   {
@@ -83,6 +83,6 @@ bool DropState::checkForDropoff(std::shared_ptr<GameMap> &game_map, int radius, 
       return true;
     }
   }
-  custom_logger::log("Dropoff not found");
+  // custom_logger::log("Dropoff not found");
   return false;
 }

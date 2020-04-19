@@ -29,12 +29,12 @@ void Player::updateShips(const int num_ships, const int game_width, const int ga
     if (m_ships.find(ship->getId()) == m_ships.end())
     {
       m_ships[ship->getId()] = ship;
-      custom_logger::log("[Player::updateShips] Ship created, id " + std::to_string(ship->getId()));
+      // custom_logger::log("[Player::updateShips] Ship created, id " + std::to_string(ship->getId()));
     }
     else
     {
       m_ships[ship->getId()]->update(ship.get());
-      custom_logger::log("[Player::updateShips] Ship updated, id " + std::to_string(ship->getId()));
+      // custom_logger::log("[Player::updateShips] Ship updated, id " + std::to_string(ship->getId()));
     }
   }
 
@@ -44,7 +44,7 @@ void Player::updateShips(const int num_ships, const int game_width, const int ga
     if (std::find(id_ships.begin(), id_ships.end(), it->first) == id_ships.end())
     {
       it = m_ships.erase(it);
-      custom_logger::log("[Player::updateShips] Ship erased, id : " + std::to_string(it->first));
+      // custom_logger::log("[Player::updateShips] Ship erased, id : " + std::to_string(it->first));
     }
     else
     {
@@ -68,7 +68,7 @@ void Player::updateDropoffs(const int num_dropoffs)
     if (m_dropoffs.find(dropoff->getId()) == m_dropoffs.end())
     {
       m_dropoffs[dropoff->getId()] = dropoff;
-      custom_logger::log("[Player::updateDropoffs] Dropoff created, id " + std::to_string(dropoff->getId()));
+      // custom_logger::log("[Player::updateDropoffs] Dropoff created, id " + std::to_string(dropoff->getId()));
     }
   }
 }

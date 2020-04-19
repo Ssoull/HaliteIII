@@ -27,7 +27,7 @@ static std::string get_string(std::unordered_map<std::string, std::string> &map,
   auto it = map.find(key);
   if (it == map.end())
   {
-    custom_logger::log("Error: constants: server did not send " + key + " constant.");
+    // custom_logger::log("Error: constants: server did not send " + key + " constant.");
     exit(1);
   }
   return it->second;
@@ -55,8 +55,8 @@ static bool get_bool(std::unordered_map<std::string, std::string> &map, const st
     return false;
   }
 
-  custom_logger::log("Error: constants: " + key + " constant has value of '" + string_value +
-                     "' from server. Do not know how to parse that as boolean.");
+  // custom_logger::log("Error: constants: " + key + " constant has value of '" + string_value +
+                    //  "' from server. Do not know how to parse that as boolean.");
   exit(1);
 }
 
@@ -98,7 +98,7 @@ void constants::populate_constants(const std::string &string_from_engine)
 
   if ((tokens.size() % 2) != 0)
   {
-    custom_logger::log("Error: constants: expected even total number of key and value tokens from server.");
+    // custom_logger::log("Error: constants: expected even total number of key and value tokens from server.");
     exit(1);
   }
 

@@ -82,7 +82,7 @@ bool Dstar::occupied(state u)
  */
 void Dstar::init(Position startPos, Position goalPos)
 {
-  custom_logger::log("[Dstar::init] StartPos : " + startPos.to_string() + "; GoalPos : " + goalPos.to_string());
+  // custom_logger::log("[Dstar::init] StartPos : " + startPos.to_string() + "; GoalPos : " + goalPos.to_string());
   init(startPos.getXCoord(), startPos.getYCoord(), goalPos.getXCoord(), goalPos.getYCoord());
 }
 
@@ -232,7 +232,7 @@ int Dstar::computeShortestPath()
 
     if (k++ > maxSteps)
     {
-      custom_logger::log("[Dstar::computeShortestPath] At maxsteps");
+      // custom_logger::log("[Dstar::computeShortestPath] At maxsteps");
       return -1;
     }
 
@@ -646,7 +646,7 @@ bool Dstar::replan()
   //printf("res: %d ols: %d ohs: %d tk: [%f %f] sk: [%f %f] sgr: (%f,%f)\n",res,openList.size(),openHash.size(),openList.top().k.first,openList.top().k.second, s_start.k.first, s_start.k.second,getRHS(s_start),getG(s_start));
   if (res < 0)
   {
-    custom_logger::log("[Dstar::replan] NO PATH TO GOAL, REASON : RES < 0");
+    // custom_logger::log("[Dstar::replan] NO PATH TO GOAL, REASON : RES < 0");
     return false;
   }
   list<state> n;
@@ -656,7 +656,7 @@ bool Dstar::replan()
 
   if (isinf(getG(s_start)))
   {
-    custom_logger::log("[Dstar::replan] NO PATH TO GOAL REASON : G VALUE");
+    // custom_logger::log("[Dstar::replan] NO PATH TO GOAL REASON : G VALUE");
     return false;
   }
 
@@ -668,7 +668,7 @@ bool Dstar::replan()
 
     if (n.empty())
     {
-      custom_logger::log("[Dstar::replan] NO PATH TO GOAL REASON : EMPTY");
+      // custom_logger::log("[Dstar::replan] NO PATH TO GOAL REASON : EMPTY");
       return false;
     }
 
