@@ -4,6 +4,7 @@
 #include "position.hpp"
 #include "entity.hpp"
 
+// Dropoff class inherite from Entity class
 class Dropoff : public Entity
 {
 public:

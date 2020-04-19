@@ -2,7 +2,7 @@
 #define DEFAULTSTATE_H
 
 #include "state.hpp"
-
+//Default state the ships are created with, it's only used as a hacky solution to use the onStateEnter() of the harvesting state.
 class DefaultState : public State
 {
 private:

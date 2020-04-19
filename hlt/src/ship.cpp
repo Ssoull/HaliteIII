@@ -27,46 +27,50 @@ std::string Ship::move(const Direction direction) const
 Direction Ship::computeNextDirection(const Position &dest, std::shared_ptr<GameMap> &game_map,
                                      const bool include_shipyard, const bool include_dropoffs)
 {
-  custom_logger::log("[Ship::computeNextDirection] Ship id : " + std::to_string(m_entityId));
-  custom_logger::log("[Ship::computeNextDirection] Current cell : " + m_position.to_string());
-  custom_logger::log("[Ship::computeNextDirection] Destination cell : " + dest.to_string());
+  // // custom_logger::log("[Ship::computeNextDirection] Ship id : " + std::to_string(m_entityId));
+  // custom_logger::log("[Ship::computeNextDirection] Current cell : " + m_position.to_string());
+  // custom_logger::log("[Ship::computeNextDirection] Destination cell : " + dest.to_string());
 
   // Check if the ship have enough halite to move
   double costToMove = game_map->getCost(m_position);
   if (m_halite < costToMove) // Must not be equal because if current halite=0 and cost=0, the ship can move
   {
-    custom_logger::log("[Ship::computeNextDirection] Not enough halite : " + std::to_string(m_halite) + ", Cost to move : " + std::to_string(costToMove));
+    // custom_logger::log("[Ship::computeNextDirection] Not enough halite : " + std::to_string(m_halite) + ", Cost to move : " + std::to_string(costToMove));
     return Direction::Still;
   }
 
+  // We init the dstar algorithm with start position and destination
   m_pathToDest->init(m_position, dest);
 
+  // We populate the dstar with cost and obstacles
   populateDstar(game_map, include_shipyard, include_dropoffs);
 
+  // If the replan fail the ship still at his position
   if (!m_pathToDest->replan())
   {
     return Direction::Still;
   }
 
+  // Get the path to the destination
   list<state> list = m_pathToDest->getPath();
-  list.pop_front();
+  list.pop_front(); // The first coordinates is the start cell
 
   state nextStep;
 
+  // If the path is not empty
   if (!list.empty())
   {
-    nextStep = list.front();
+    nextStep = list.front(); // We get the next coordinates
   }
   else
   {
-    nextStep.x = m_position.getXCoord();
-    nextStep.y = m_position.getYCoord();
+    return Direction::Still; // The ship stay at his position
   }
 
-  custom_logger::log("[Ship::computeNextDirection] Next Step : " + std::to_string(nextStep.x) + ", " +
-                     std::to_string(nextStep.y) + ", ID ship : " + std::to_string(m_entityId));
+  // custom_logger::log("[Ship::computeNextDirection] Next Step : " + std::to_string(nextStep.x) + ", " +
+                    //  std::to_string(nextStep.y) + ", ID ship : " + std::to_string(m_entityId));
 
-  game_map->at(Position(nextStep.x, nextStep.y))->markShip(true, true);
+  game_map->at(Position(nextStep.x, nextStep.y))->markShip(true, true); // We mark the next coordinates of the ship as unsafe
 
   int dx = nextStep.x - m_position.getXCoord();
   if (dx != 0)
@@ -84,7 +88,7 @@ Direction Ship::computeNextDirection(const Position &dest, std::shared_ptr<GameM
 }
 
 // Private function & method
-
+// We select the best direction in function of the difference between coordinates because of the toroidal structure of the map
 Direction Ship::directionSelection(const int diff, const int size, const Direction first, const Direction second) const
 {
   if (abs(diff) > size / 2)
@@ -121,8 +125,7 @@ void Ship::populateDstar(std::shared_ptr<GameMap> &game_map, const bool include_
       Position currentPosition = Position(x, y);
       MapCell currentMapCell = *game_map->at(currentPosition);
 
-      double cost = game_map->getCost(currentPosition);
-      if (!currentMapCell.hasStructure() && cost != 0.)
+      if (!currentMapCell.hasStructure())
       {
         // To debug the cost on each cell
         // Commented by default otherwise there is to much data displayed in logs
@@ -146,7 +149,7 @@ void Ship::populateDstar(std::shared_ptr<GameMap> &game_map, const bool include_
         if (hasShipyard || hasDropoff || hasShip)
         {
           m_pathToDest->updateCell(currentPosition, -1);
-          custom_logger::log("[GameMap::populateDstar] Unsafe Cells : " + currentPosition.to_string());
+          // custom_logger::log("[Ship::populateDstar] Unsafe Cells : " + currentPosition.to_string());
         }
       }
     }
@@ -173,21 +176,32 @@ void Ship::update(const Ship *ship)
   m_position = ship->m_position;
 }
 
-std::string Ship::update(shared_ptr<GameMap> &game_map)
+std::string Ship::update(shared_ptr<GameMap> &game_map, std::shared_ptr<Player> &me)
 {
   m_shipState->update(this, game_map);
-  //TODO: Trouver un moyen de faire en sorte de savoir si on doit inclure ou non les shipyard/dropoffs
   if (!m_shipState->shouldCreateDropoff)
   {
-    if(game_map->at(m_shipState->getDestination())->hasShip() && game_map->computeManathanDistance(m_position, m_shipState->getDestination())<=1){
+    if (game_map->at(m_shipState->getDestination())->hasShip() && game_map->computeManathanDistance(m_position, m_shipState->getDestination()) <= 1)
+    {
       return Command::move(m_entityId, Direction::Still);
     }
     return Command::move(m_entityId, computeNextDirection(m_shipState->getDestination(), game_map, true, true));
   }
   else
   {
-    custom_logger::log("Transforming ship");
-    // return Command::transformShipIntoDropoff(m_entityId);
+    // custom_logger::log("Transforming ship");
+    // game_map->at(m_shipState->getDestination())->getHalite() +
+    if (me->getHalite() >= 4000 && !me->getDropoffCreation())
+    {
+      me->setDropoffCreation(true);
+      return Command::transformShipIntoDropoff(m_entityId);
+    }
+    else
+    {
+      //Avoid ships in drop state to be stuck at waiting the correct amount of halite.
+      // m_shipState->onStateEnter(game_map, this);
+    }
+
     return Command::move(m_entityId, Direction::Still);
   }
 }

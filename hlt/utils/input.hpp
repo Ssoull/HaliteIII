@@ -14,7 +14,7 @@ static std::string get_string()
   std::getline(std::cin, result);
   if (!std::cin.good())
   {
-    custom_logger::log("Input connection from server closed. Exiting...");
+    // custom_logger::log("Input connection from server closed. Exiting...");
     exit(0);
   }
   return result;

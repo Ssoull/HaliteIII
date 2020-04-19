@@ -82,7 +82,7 @@ bool Dstar::occupied(state u)
  */
 void Dstar::init(Position startPos, Position goalPos)
 {
-  custom_logger::log("[Dstar::init] StartPos : " + startPos.to_string() + "; GoalPos : " + goalPos.to_string());
+  // custom_logger::log("[Dstar::init] StartPos : " + startPos.to_string() + "; GoalPos : " + goalPos.to_string());
   init(startPos.getXCoord(), startPos.getYCoord(), goalPos.getXCoord(), goalPos.getYCoord());
 }
 
@@ -191,17 +191,6 @@ void Dstar::setRHS(state u, double rhs)
  */
 double Dstar::eightCondist(state a, state b)
 {
-  // double temp;
-  // double min = fabs(a.x - b.x);
-  // double max = fabs(a.y - b.y);
-  // if (min > max)
-  // {
-  //   double temp = min;
-  //   min = max;
-  //   max = temp;
-  // }
-  // return ((M_SQRT2 - 1.0) * min + max);
-
   // Working on a solution to implement toroidal distance
   int dx = std::abs(b.x - a.x);
   int dy = std::abs(b.y - a.y);
@@ -243,7 +232,7 @@ int Dstar::computeShortestPath()
 
     if (k++ > maxSteps)
     {
-      custom_logger::log("[Dstar::computeShortestPath] At maxsteps");
+      // custom_logger::log("[Dstar::computeShortestPath] At maxsteps");
       return -1;
     }
 
@@ -383,10 +372,21 @@ void Dstar::remove(state u)
  */
 double Dstar::trueDist(state a, state b)
 {
+  int dx = std::abs(b.x - a.x);
+  int dy = std::abs(b.y - a.y);
+  if (dx > (mapSizeX + 1) / 2)
+  {
+    dx = mapSizeX + 1 - dx;
+  }
+  if (dy > (mapSizeY + 1) / 2)
+  {
+    dy = mapSizeY + 1 - dy;
+  }
 
-  float x = a.x - b.x;
-  float y = a.y - b.y;
-  return sqrt(x * x + y * y);
+  return std::sqrt((dx * dx) + (dy * dy));
+  // float x = a.x - b.x;
+  // float y = a.y - b.y;
+  // return sqrt(x * x + y * y);
 }
 
 /* double Dstar::heuristic(state a, state b)
@@ -646,7 +646,7 @@ bool Dstar::replan()
   //printf("res: %d ols: %d ohs: %d tk: [%f %f] sk: [%f %f] sgr: (%f,%f)\n",res,openList.size(),openHash.size(),openList.top().k.first,openList.top().k.second, s_start.k.first, s_start.k.second,getRHS(s_start),getG(s_start));
   if (res < 0)
   {
-    custom_logger::log("[Dstar::replan] NO PATH TO GOAL, REASON : RES < 0");
+    // custom_logger::log("[Dstar::replan] NO PATH TO GOAL, REASON : RES < 0");
     return false;
   }
   list<state> n;
@@ -656,19 +656,19 @@ bool Dstar::replan()
 
   if (isinf(getG(s_start)))
   {
-    custom_logger::log("[Dstar::replan] NO PATH TO GOAL REASON : G VALUE");
+    // custom_logger::log("[Dstar::replan] NO PATH TO GOAL REASON : G VALUE");
     return false;
   }
 
-  while (cur != s_goal)
+  bool partiallyFound = false;
+  while (cur != s_goal && !partiallyFound)
   {
-
     path.push_back(cur);
     getSucc(cur, n);
 
     if (n.empty())
     {
-      custom_logger::log("[Dstar::replan] NO PATH TO GOAL REASON : EMPTY");
+      // custom_logger::log("[Dstar::replan] NO PATH TO GOAL REASON : EMPTY");
       return false;
     }
 
@@ -676,32 +676,45 @@ bool Dstar::replan()
     double tmin;
     state smin;
 
+    //! Heavy custom_logger !
+    // custom_logger::log("Current pos " + std::to_string(cur.x) + "-" + std::to_string(cur.y));
+    int count = 0;
     for (i = n.begin(); i != n.end(); i++)
     {
-      // if (occupied(*i))
-      // {
-      //   custom_logger::log("Is occupied continue");
-      //   continue;
-      // }
-
-      double val = cost(cur, *i);
-      double val2 = trueDist(*i, s_goal) + trueDist(s_start, *i); // (Euclidean) cost to goal + cost to pred
-      val += getG(*i);
-
-      if (close(val, cmin))
+      // custom_logger::log("Possible coord " + std::to_string(i->x) + "-" + std::to_string(i->y) + " check " + std::to_string(*i == cur));
+      auto it = std::find(path.begin(), path.end(), *i);
+      if (occupied(*i) || path.end() != it)
       {
-        if (tmin > val2)
+        // custom_logger::log("Is occupied continue");
+        if (++count == 4)
+        {
+          // custom_logger::log("Patially found");
+          partiallyFound = true;
+        }
+        continue;
+      }
+
+      else
+      {
+        double val = cost(cur, *i);
+        double val2 = trueDist(*i, s_goal) + trueDist(s_start, *i); // (Euclidean) cost to goal + cost to pred
+        val += getG(*i);
+
+        if (close(val, cmin))
+        {
+          if (tmin > val2)
+          {
+            tmin = val2;
+            cmin = val;
+            smin = *i;
+          }
+        }
+        else if (val < cmin)
         {
           tmin = val2;
           cmin = val;
           smin = *i;
         }
-      }
-      else if (val < cmin)
-      {
-        tmin = val2;
-        cmin = val;
-        smin = *i;
       }
     }
     n.clear();

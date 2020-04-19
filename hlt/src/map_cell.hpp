@@ -3,17 +3,18 @@
 
 #include "position.hpp"
 
+// Map cell map
 class MapCell
 {
 private:
   Position m_position;
   int m_halite;
 
-  bool m_isMine;
+  bool m_isMine; // Determine if the entity on the cell is mine or not
 
-  bool m_hasShip;
-  bool m_hasShipyard;
-  bool m_hasDropoff;
+  bool m_hasShip;     // Determine if there is a ship on the cell
+  bool m_hasShipyard; // Determine if there is a shipyard on the cell
+  bool m_hasDropoff;  // Determine if there is a dropoff on the cell
 
 public:
   MapCell();
